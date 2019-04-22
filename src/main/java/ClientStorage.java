@@ -5,11 +5,10 @@ public class ClientStorage {
 
     public static final List<Client> CLIENTS = new ArrayList<>();
 
-
-    // return
+    // return true if client added and false if client already in list
     public static boolean addUniqueClient(Client newClient) {
         boolean check = CLIENTS.stream().anyMatch(o1 -> o1.getLogin().equals(newClient.getLogin()));
-        if(check) {
+        if (check) {
             return false;
         } else {
             CLIENTS.add(newClient);
