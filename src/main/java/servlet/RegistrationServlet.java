@@ -12,7 +12,6 @@ import java.io.IOException;
 
 @WebServlet(value = "/registration")
 public class RegistrationServlet extends HttpServlet {
-    private static final UserDao userDao = new UserDao();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -21,7 +20,7 @@ public class RegistrationServlet extends HttpServlet {
         String password = req.getParameter("password");
         Client newClient = new Client(login, password);
 
-        if (userDao.addClient(newClient)) {
+        if (UserDao.addClient(newClient) > 0) {
             resp.getWriter().print(login + " welcome to our website");
         } else {
             resp.getWriter().print("User with name " + login + " already exist");

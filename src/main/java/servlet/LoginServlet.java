@@ -11,7 +11,6 @@ import java.io.IOException;
 
 @WebServlet(value = "/login")
 public class LoginServlet extends HttpServlet {
-    private static final UserDao userDao = new UserDao();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -23,7 +22,7 @@ public class LoginServlet extends HttpServlet {
         String password = req.getParameter("password");
         Client newClient = new Client(login, password);
 
-        if (userDao.checkClient(newClient)) {
+        if (UserDao.checkClient(newClient)) {
             resp.getWriter().print("Привет " + login);
         } else {
             resp.getWriter().print("неверный логин/пасс");
