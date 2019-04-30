@@ -6,6 +6,14 @@
     <title>Registration</title>
 </head>
 <body>
+<style>
+    h1 {
+        text-align: center;
+    }
+    form {
+        text-align: center;
+    }
+</style>
 <h1>Registration Form</h1>
 <form action="registration" method="post">
     login <input type="text" name="login"/><br/><br>

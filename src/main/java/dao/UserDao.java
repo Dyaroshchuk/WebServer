@@ -9,27 +9,29 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class UserDao {
 
     private static final Connection connection = DbConnector.connect();
 
     public static int addClient(Client client) {
-        int status = 0;
         try {
             PreparedStatement statement = connection.prepareStatement(
-                    "INSERT INTO users(name, password) VALUES (?,?)");
+                    "INSERT INTO users(name, password, role_id) VALUES (?,?, ?)");
             statement.setString(1, client.getLogin());
             statement.setString(2, client.getPassword());
-            status = statement.executeUpdate();
+            statement.setLong(3, 2);
+            int status = statement.executeUpdate();
             statement.close();
+            return status;
         } catch (SQLException e) {
             e.printStackTrace();
+            return 0;
         }
-        return status;
     }
 
-    // checking client by login and password; log and pass match to db values - true, and false if not
+    // checking client by login and password; if log and pass match to db values - true, and false if not
     public static boolean checkClient(Client client) {
         boolean result = false;
         try {
@@ -72,47 +74,49 @@ public class UserDao {
     }
 
     public static int deleteClient(String name) {
-        int result = 0;
         try {
             PreparedStatement statement = connection.prepareStatement(
                     "DELETE FROM users WHERE name = ?");
             statement.setString(1, name);
-            result = statement.executeUpdate();
+            int result = statement.executeUpdate();
+            return result;
         } catch (SQLException e) {
             e.printStackTrace();
+            return 0;
         }
-        return result;
     }
 
     public static int editClient(Client client) {
-        int result = 0;
         try {
             PreparedStatement statement = connection.prepareStatement(
                     "UPDATE users SET password = ? WHERE name = ?");
             statement.setString(1, client.getPassword());
             statement.setString(2, client.getLogin());
-            result = statement.executeUpdate();
+            int result = statement.executeUpdate();
+            return result;
         } catch (SQLException e) {
             e.printStackTrace();
+            return 0;
         }
-        return result;
     }
 
-    public static Client getClientByName(String name) {
+    public static Optional<Client> getClientByName(String name) {
         try {
             PreparedStatement statement = connection.prepareStatement(
-                    "SELECT * FROM users WHERE name = ? ");
+                    "SELECT users.password, roles.role FROM users inner join " +
+                            "roles on users.role_id = roles.id WHERE name = ?");
             statement.setString(1, name);
             ResultSet resultSet = statement.executeQuery();
             Client newClient = new Client();
             while (resultSet.next()) {
                 String password = resultSet.getString("password");
-                newClient = new Client(name, password);
+                String role = resultSet.getString("role");
+                newClient = new Client(name, password, Client.Role.valueOf(role));
             }
-            return newClient;
+            return Optional.of(newClient);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return Optional.empty();
     }
 }

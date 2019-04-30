@@ -19,7 +19,8 @@ public class DeleteServlet extends HttpServlet {
         if (result > 0) {
             resp.sendRedirect("clientList");
         } else {
-            resp.getWriter().print("error");
+            req.setAttribute("error", "Error, can't delete " + clientName);
+            req.getRequestDispatcher("clientList.jsp").forward(req, resp);
         }
     }
 }

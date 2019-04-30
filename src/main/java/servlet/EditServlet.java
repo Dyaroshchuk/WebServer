@@ -24,7 +24,7 @@ public class EditServlet extends HttpServlet {
         if (result > 0) {
             resp.sendRedirect("clientList");
         } else {
-            resp.getWriter().print("we couldn't change the client");
+            resp.getWriter().print("we couldn't change client name");
         }
 
 

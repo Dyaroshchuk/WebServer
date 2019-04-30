@@ -5,8 +5,14 @@
     <title>Client List</title>
 </head>
 <body>
+<style>
+    a, h1, h3, td, th {
+        text-align: center;
+    }
+</style>
 <a href="index.jsp">Home page</a>
 <h1>Clients List</h1>
+<h3><c:out value="${error}"></c:out></h3>
 <table border='1' width='100%'>
     <tr>
         <th>Name</th>

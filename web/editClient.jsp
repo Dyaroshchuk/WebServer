@@ -5,6 +5,11 @@
     <title>EditClient</title>
 </head>
 <body>
+<style>
+    h1, form {
+        text-align: center;
+    }
+</style>
 <h1>Edit Client</h1>
 <form action="edit" method="post">
     login <input type="text" name="login" value="${client.getLogin()}"><br><br>
