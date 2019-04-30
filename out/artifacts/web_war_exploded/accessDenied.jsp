@@ -3,12 +3,10 @@
 <html>
 <head>
     <title>Access Denied</title>
+    <link rel="stylesheet" href="http://localhost:8082/myStyle.css">
 </head>
 <body>
 <style>
-    h1 {
-        text-align: center;
-    }
 </style>
 <h1>Access Denied</h1>
 </body>

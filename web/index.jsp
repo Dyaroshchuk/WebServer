@@ -3,15 +3,10 @@
 <html>
 <head>
     <title>Home Page</title>
+    <link rel="stylesheet" href="http://localhost:8082/myStyle.css">
 </head>
 <body>
-<style>
-    h1, h3, h4, form {
-        text-align: center;
-    }
-</style>
 <h1>Home Page</h1>
-
 <form action="login" method="post">
     login <input type="text" name="login"><br><br>
     password <input type="password" name="password" required="required"><br><br>

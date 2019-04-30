@@ -3,13 +3,9 @@
 <html>
 <head>
     <title>EditClient</title>
+    <link rel="stylesheet" href="http://localhost:8082/myStyle.css">
 </head>
 <body>
-<style>
-    h1, form {
-        text-align: center;
-    }
-</style>
 <h1>Edit Client</h1>
 <form action="edit" method="post">
     login <input type="text" name="login" value="${client.getLogin()}"><br><br>

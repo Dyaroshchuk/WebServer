@@ -4,16 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Registration</title>
+    <link rel="stylesheet" href="http://localhost:8082/myStyle.css">
 </head>
 <body>
-<style>
-    h1 {
-        text-align: center;
-    }
-    form {
-        text-align: center;
-    }
-</style>
 <h1>Registration Form</h1>
 <form action="registration" method="post">
     login <input type="text" name="login"/><br/><br>

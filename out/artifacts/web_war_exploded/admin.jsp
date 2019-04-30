@@ -3,13 +3,9 @@
 <html>
 <head>
     <title>Admin Page</title>
+    <link rel="stylesheet" href="http://localhost:8082/myStyle.css">
 </head>
 <body>
-<style>
-    h3, form{
-        text-align: center;
-    }
-</style>
 <h3><c:out value="${welcome}"></c:out></h3>
 <form action="clientList">
     <br><input type="submit" value="Client List"/>

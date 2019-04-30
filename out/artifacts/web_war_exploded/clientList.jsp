@@ -3,13 +3,9 @@
 <html>
 <head>
     <title>Client List</title>
+    <link rel="stylesheet" href="http://localhost:8082/myStyle.css">
 </head>
 <body>
-<style>
-    a, h1, h3, td, th {
-        text-align: center;
-    }
-</style>
 <a href="index.jsp">Home page</a>
 <h1>Clients List</h1>
 <h3><c:out value="${error}"></c:out></h3>

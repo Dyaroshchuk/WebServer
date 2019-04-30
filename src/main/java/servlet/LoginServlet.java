@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @WebServlet(value = "/login")
@@ -22,23 +23,31 @@ public class LoginServlet extends HttpServlet {
 
         String login = req.getParameter("login");
         String password = req.getParameter("password");
-        Optional<Client> clientFromDB = UserDao.getClientByName(login);
-        if (clientFromDB.isPresent()) {
-            Client client = clientFromDB.get();
+        Client client = getClientFromOptional(UserDao.getClientByName(login));
             if (client.getPassword().equals(password)) {
                 req.getSession().setAttribute("client", client);
-                if (client.getRole().equals(Client.Role.ADMIN)) {
-                    req.setAttribute("welcome", login + ", welcome to admin page");
-                    req.getRequestDispatcher("/admin").forward(req, resp);
-                } else {
-                    req.setAttribute("welcome", login + ", welcome to your personal area");
-                    req.getRequestDispatcher("personalArea.jsp").forward(req, resp);
-                }
+                redirectByRole(client, req, resp);
             } else {
                 req.setAttribute("error", "wrong login or password");
                 req.getRequestDispatcher("index.jsp").forward(req, resp);
             }
-        }
 
+    }
+
+    private static Client getClientFromOptional(Optional<Client> clientFromDB) {
+        if (clientFromDB.isPresent()) {
+            return clientFromDB.get();
+        } else {
+            throw new NoSuchElementException("We haven't such client in DB");
+        }
+    }
+    private static void  redirectByRole(Client client, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if (client.getRole().equals(Client.Role.ADMIN)) {
+            req.setAttribute("welcome", client.getLogin() + ", welcome to admin page");
+            req.getRequestDispatcher("/admin").forward(req, resp);
+        } else {
+            req.setAttribute("welcome", client.getLogin() + ", welcome to your personal area");
+            req.getRequestDispatcher("personalArea.jsp").forward(req, resp);
+        }
     }
 }
