@@ -18,10 +18,11 @@ public class UserDao {
     public static int addClient(Client client) {
         try {
             PreparedStatement statement = connection.prepareStatement(
-                    "INSERT INTO users(name, password, role_id) VALUES (?,?, ?)");
+                    "INSERT INTO users(name, password, email, role_id) VALUES (?, ?, ?, ?)");
             statement.setString(1, client.getLogin());
             statement.setString(2, client.getPassword());
-            statement.setLong(3, 2);
+            statement.setString(3, client.getEmail());
+            statement.setLong(4, 2);
             int status = statement.executeUpdate();
             statement.close();
             return status;
@@ -103,7 +104,7 @@ public class UserDao {
     public static Optional<Client> getClientByName(String name) {
         try {
             PreparedStatement statement = connection.prepareStatement(
-                    "SELECT users.password, roles.role FROM users inner join " +
+                    "SELECT users.password, users.email, roles.role FROM users inner join " +
                             "roles on users.role_id = roles.id WHERE name = ?");
             statement.setString(1, name);
             ResultSet resultSet = statement.executeQuery();
@@ -111,7 +112,8 @@ public class UserDao {
             while (resultSet.next()) {
                 String password = resultSet.getString("password");
                 String role = resultSet.getString("role");
-                newClient = new Client(name, password, Client.Role.valueOf(role));
+                String email = resultSet.getString("email");
+                newClient = new Client(name, password, email, Client.Role.valueOf(role));
             }
             return Optional.of(newClient);
         } catch (SQLException e) {

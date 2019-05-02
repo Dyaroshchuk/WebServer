@@ -6,18 +6,21 @@ public class Client {
 
     private String login;
     private String password;
+    private String email;
     private Long role_id;
     private Role role;
 
-    public Client(String login, String password, Role role) {
+    public Client(String login, String password, String email, Role role) {
         this.login = login;
         this.password = password;
+        this.email = email;
         this.role = role;
     }
 
-    public Client(String login, String password, Long role_id) {
+    public Client(String login, String password, String email, Long role_id) {
         this.login = login;
         this.password = password;
+        this.email = email;
         this.role_id = role_id;
     }
 
@@ -61,6 +64,14 @@ public class Client {
         this.role = role;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -68,13 +79,25 @@ public class Client {
         Client client = (Client) o;
         return Objects.equals(login, client.login) &&
                 Objects.equals(password, client.password) &&
+                Objects.equals(email, client.email) &&
                 Objects.equals(role_id, client.role_id) &&
-                Objects.equals(role, client.role);
+                role == client.role;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(login, password, role_id, role);
+        return Objects.hash(login, password, email, role_id, role);
+    }
+
+    @Override
+    public String toString() {
+        return "Client{" +
+                "login='" + login + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", role_id=" + role_id +
+                ", role=" + role +
+                '}';
     }
 
     public enum Role {

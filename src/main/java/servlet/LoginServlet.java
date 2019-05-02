@@ -46,8 +46,8 @@ public class LoginServlet extends HttpServlet {
             req.setAttribute("welcome", client.getLogin() + ", welcome to admin page");
             req.getRequestDispatcher("/admin").forward(req, resp);
         } else {
-            req.setAttribute("welcome", client.getLogin() + ", welcome to your personal area");
-            req.getRequestDispatcher("personalArea.jsp").forward(req, resp);
+            req.setAttribute("welcome", client.getLogin() + ", welcome to our store");
+            req.getRequestDispatcher("product.jsp").forward(req, resp);
         }
     }
 }

@@ -19,7 +19,8 @@ public class RegistrationServlet extends HttpServlet {
 
         String login = req.getParameter("login");
         String password = req.getParameter("password");
-        Client newClient = new Client(login, password);
+        String email = req.getParameter("email");
+        Client newClient = new Client(login, password, email, 2L);
 
         if (UserDao.addClient(newClient) > 0) {
             req.setAttribute("login", login);
