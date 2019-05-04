@@ -108,14 +108,15 @@ public class UserDao {
                             "roles on users.role_id = roles.id WHERE name = ?");
             statement.setString(1, name);
             ResultSet resultSet = statement.executeQuery();
-            Client newClient = new Client();
-            while (resultSet.next()) {
+            Client newClient;
+            if (resultSet.next()) {
                 String password = resultSet.getString("password");
                 String role = resultSet.getString("role");
                 String email = resultSet.getString("email");
                 newClient = new Client(name, password, email, Client.Role.valueOf(role));
+                return Optional.of(newClient);
             }
-            return Optional.of(newClient);
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
