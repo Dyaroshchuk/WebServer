@@ -2,8 +2,8 @@ package servlet;
 
 import dao.CodeDao;
 import dao.ProductDao;
+import model.BuyCodeConfirmation;
 import model.Client;
-import model.Code;
 import model.Product;
 import service.MailService;
 import utils.RandomHelper;
@@ -27,13 +27,16 @@ public class BuyProductServlet extends HttpServlet {
         resp.setContentType("text/html");
         Long productId = Long.parseLong(req.getParameter("good_id"));
         Client client = (Client) req.getSession().getAttribute("client");
-        String codeValue = req.getParameter("code");
-        Code code = new Code(codeValue, client.getLogin(), productId);
-        if (CodeDao.checkCode(code)) {
+        String codeValue = req.getParameter("buyCodeConfirmation");
+        BuyCodeConfirmation buyCodeConfirmation = new BuyCodeConfirmation(codeValue, client.getLogin(), productId);
+        if (CodeDao.checkCode(buyCodeConfirmation)) {
             Product product = ProductDao.getProductById(productId).get();
-            resp.getWriter().print("You buy " + product.getName());
+            req.setAttribute("approved", "You are successful buy " + product.getName());
+            req.getRequestDispatcher("/product").forward(req, resp);
         } else {
-            resp.getWriter().print("wrong code confirmation");
+            req.setAttribute("error", "wrong Code confirmation");
+            req.setAttribute("productId", productId);
+            req.getRequestDispatcher("buyConfirmation.jsp").forward(req, resp);
         }
 
     }
@@ -44,8 +47,8 @@ public class BuyProductServlet extends HttpServlet {
         Client client = (Client) req.getSession().getAttribute("client");
         String randomCode = RandomHelper.getRandomCode();
         mailService.sendMail(client.getEmail(), randomCode);
-        Code code = new Code(randomCode, client.getLogin(), productId);
-        CodeDao.addProduct(code);
+        BuyCodeConfirmation buyCodeConfirmation = new BuyCodeConfirmation(randomCode, client.getLogin(), productId);
+        CodeDao.addProduct(buyCodeConfirmation);
         req.setAttribute("productId", productId);
         req.getRequestDispatcher("buyConfirmation.jsp").forward(req, resp);
     }

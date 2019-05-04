@@ -2,13 +2,13 @@ package model;
 
 import java.util.Objects;
 
-public class Code {
+public class BuyCodeConfirmation {
 
     private String value;
     private String clientName;
     private Long productId;
 
-    public Code(String value, String clientName, Long productId) {
+    public BuyCodeConfirmation(String value, String clientName, Long productId) {
         this.value = value;
         this.clientName = clientName;
         this.productId = productId;
@@ -42,10 +42,10 @@ public class Code {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Code code = (Code) o;
-        return Objects.equals(value, code.value) &&
-                Objects.equals(clientName, code.clientName) &&
-                Objects.equals(productId, code.productId);
+        BuyCodeConfirmation buyCodeConfirmation = (BuyCodeConfirmation) o;
+        return Objects.equals(value, buyCodeConfirmation.value) &&
+                Objects.equals(clientName, buyCodeConfirmation.clientName) &&
+                Objects.equals(productId, buyCodeConfirmation.productId);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class Code {
 
     @Override
     public String toString() {
-        return "Code{" +
+        return "BuyCodeConfirmation{" +
                 "value='" + value + '\'' +
                 ", clientName='" + clientName + '\'' +
                 ", productId=" + productId +

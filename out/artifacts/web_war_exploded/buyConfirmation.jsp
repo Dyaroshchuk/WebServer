@@ -1,21 +1,17 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: ноут
-  Date: 03.05.2019
-  Time: 18:19
-  To change this template use File | Settings | File Templates.
---%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
     <title>Buy Confirmation</title>
+    <link rel="stylesheet" href="http://localhost:8082/myStyle.css">
 </head>
 <body>
 <h3>Buy Confirmation</h3>
 <form action="/buy" method="post">
     <input hidden type="text" name="good_id" value="${productId}">
-    <input type="password" title="password" name="code">
+    <input type="password" title="password" name="buyCodeConfirmation">
     <input type="submit" value="confirm">
+    <h4><c:out value="${error}"></c:out></h4>
 </form>
 
 </body>

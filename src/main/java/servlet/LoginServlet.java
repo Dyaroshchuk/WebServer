@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @WebServlet(value = "/login")
@@ -39,7 +40,7 @@ public class LoginServlet extends HttpServlet {
         } else {
             req.setAttribute("error", "wrong login or password");
             req.getRequestDispatcher("index.jsp").forward(req, resp);
-            return null;
+            throw new NoSuchElementException("we don't have such client in DB");
         }
     }
     private static void  redirectByRole(Client client, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

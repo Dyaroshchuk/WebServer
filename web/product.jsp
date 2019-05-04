@@ -7,6 +7,7 @@
 </head>
 <body>
 <h3><c:out value="${welcome}"></c:out></h3>
+<h4><c:out value="${approved}"></c:out></h4>
 <table border='1' width='70%'>
     <tr>
         <th>Name</th>

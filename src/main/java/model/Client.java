@@ -81,7 +81,7 @@ public class Client {
                 Objects.equals(password, client.password) &&
                 Objects.equals(email, client.email) &&
                 Objects.equals(role_id, client.role_id) &&
-                role == client.role;
+                role.equals(client.role);
     }
 
     @Override

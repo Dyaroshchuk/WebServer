@@ -1,8 +1,11 @@
 package service;
 
-import utils.RandomHelper;
-
-import javax.mail.*;
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;
@@ -20,7 +23,7 @@ public class MailService {
         prop.put("mail.smtp.starttls.enable", "true"); //TLS
 
         Session session = Session.getInstance(prop,
-                new javax.mail.Authenticator() {
+                new Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {
                         return new PasswordAuthentication(username, password);
                     }
@@ -36,8 +39,6 @@ public class MailService {
             message.setText("Your code to by product: " + randomCode);
 
             Transport.send(message);
-
-            System.out.println("Done");
 
         } catch (MessagingException e) {
             e.printStackTrace();
