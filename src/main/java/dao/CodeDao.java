@@ -13,8 +13,9 @@ public class CodeDao {
 
     public static int addProduct(BuyCodeConfirmation buyCodeConfirmation) {
         try {
-            PreparedStatement statement = connection.prepareStatement(
-                    "INSERT INTO buy_codes(value, clientName, product_id) VALUES (?, ?, ?)");
+                PreparedStatement statement = connection.prepareStatement(
+                    "INSERT INTO buy_codes(value, clientName, product_id, creation_date, expiry_date) " +
+                            "VALUES (?, ?, ?, NOW(), NOW() + INTERVAL 2 minute)");
             statement.setString(1, buyCodeConfirmation.getValue());
             statement.setString(2, buyCodeConfirmation.getClientName());
             statement.setLong(3, buyCodeConfirmation.getProductId());
