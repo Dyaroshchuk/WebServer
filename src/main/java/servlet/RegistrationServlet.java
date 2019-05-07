@@ -25,7 +25,6 @@ public class RegistrationServlet extends HttpServlet {
         if (UserDao.addClient(newClient) > 0) {
             req.setAttribute("login", login);
             req.getRequestDispatcher("index.jsp").forward(req, resp);
-            //resp.getWriter().print(login + " welcome to our website");
         } else {
             resp.getWriter().print("User with name " + login + " already exist");
         }

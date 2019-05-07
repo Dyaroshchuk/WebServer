@@ -8,9 +8,10 @@
 <body>
 <h1>Edit Client</h1>
 <form action="edit" method="post">
-    login <input type="text" name="login" value="${client.getLogin()}" readonly><br><br>
-    password <input type="password" name="password" required="required" value="${client.getPassword()}"><br><br>
-    email <input type="text" name="email" value="${client.getEmail()}"><br><br>
+    ID <input type="text" name="productId" value="${product.getId()}" readonly><br><br>
+    Name <input type="text" name="name" value="${product.getName()}"><br><br>
+    Description <input type="text" name="description" value="${product.getDescription()}"><br><br>
+    Price <input type="text" name="price" value="${product.getPrice()}"><br><br>
     <input type="submit" value="save"/>
 </form>
 </body>

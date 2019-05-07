@@ -8,8 +8,9 @@
 <body>
 <h1>Edit Client</h1>
 <form action="edit" method="post">
-    login <input type="text" name="login" value="${client.getLogin()}"><br><br>
+    login <input type="text" name="login" value="${client.getLogin()}" readonly><br><br>
     password <input type="password" name="password" required="required" value="${client.getPassword()}"><br><br>
+    email <input type="text" name="email" value="${client.getEmail()}"><br><br>
     <input type="submit" value="save"/>
 </form>
 </body>

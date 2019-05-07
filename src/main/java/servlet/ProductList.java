@@ -1,7 +1,7 @@
 package servlet;
 
-import dao.UserDao;
-import model.Client;
+import dao.ProductDao;
+import model.Product;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,14 +11,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/clientList")
-public class ClientList extends HttpServlet {
+@WebServlet("/productList")
+public class ProductList extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<Client> clients = UserDao.getAllClients();
-        req.setAttribute("clients", clients);
-        req.getRequestDispatcher("clientList.jsp").forward(req, resp);
+        List<Product> products = ProductDao.getAllProducts();
+        req.setAttribute("products", products);
+        req.getRequestDispatcher("productList.jsp").forward(req, resp);
     }
 
     @Override

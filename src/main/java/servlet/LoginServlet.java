@@ -2,6 +2,7 @@ package servlet;
 
 import dao.UserDao;
 import model.Client;
+import utils.HashPassword;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -24,7 +25,8 @@ public class LoginServlet extends HttpServlet {
         String login = req.getParameter("login");
         String password = req.getParameter("password");
         Client client = getClientFromOptional(UserDao.getClientByName(login), req, resp);
-            if (client.getPassword().equals(password)) {
+        String hashedPassword = HashPassword.getSecurePassword(password, client.getSalt());
+            if (client.getPassword().equals(hashedPassword)) {
                 req.getSession().setAttribute("client", client);
                 redirectByRole(client, req, resp);
             } else {

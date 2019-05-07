@@ -1,5 +1,7 @@
 package model;
 
+import utils.HashPassword;
+
 import java.util.Objects;
 
 public class Client {
@@ -9,12 +11,14 @@ public class Client {
     private String email;
     private Long role_id;
     private Role role;
+    private String salt;
 
-    public Client(String login, String password, String email, Role role) {
+    public Client(String login, String password, String email, Role role, String salt) {
         this.login = login;
         this.password = password;
         this.email = email;
         this.role = role;
+        this.salt = salt;
     }
 
     public Client(String login, String password, String email, Long role_id) {
@@ -22,11 +26,13 @@ public class Client {
         this.password = password;
         this.email = email;
         this.role_id = role_id;
+        this.salt = HashPassword.getSalt();
     }
 
-    public Client(String login, String password) {
+    public Client(String login, String password, String email) {
         this.login = login;
         this.password = password;
+        this.email = email;
     }
 
     public Client() {
@@ -66,6 +72,14 @@ public class Client {
 
     public String getEmail() {
         return email;
+    }
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
     }
 
     public void setEmail(String email) {

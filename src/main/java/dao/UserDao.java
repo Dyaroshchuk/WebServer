@@ -1,6 +1,7 @@
 package dao;
 
 import model.Client;
+import utils.HashPassword;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,11 +19,12 @@ public class UserDao {
     public static int addClient(Client client) {
         try {
             PreparedStatement statement = connection.prepareStatement(
-                    "INSERT INTO users(name, password, email, role_id) VALUES (?, ?, ?, ?)");
+                    "INSERT INTO users(name, password, email, role_id, salt) VALUES (?, ?, ?, ?, ?)");
             statement.setString(1, client.getLogin());
-            statement.setString(2, client.getPassword());
+            statement.setString(2, HashPassword.getSecurePassword(client.getPassword(), client.getSalt()));
             statement.setString(3, client.getEmail());
-            statement.setLong(4, 2);
+            statement.setLong(4, client.getRole_id());
+            statement.setString(5, client.getSalt());
             int status = statement.executeUpdate();
             statement.close();
             return status;
@@ -66,6 +68,7 @@ public class UserDao {
                 Client getClient = new Client();
                 getClient.setLogin(resultSet.getString("name"));
                 getClient.setPassword(resultSet.getString("password"));
+                getClient.setEmail(resultSet.getString("email"));
                 clients.add(getClient);
             }
         } catch (SQLException e) {
@@ -90,9 +93,10 @@ public class UserDao {
     public static int editClient(Client client) {
         try {
             PreparedStatement statement = connection.prepareStatement(
-                    "UPDATE users SET password = ? WHERE name = ?");
+                    "UPDATE users SET password = ?, email = ? WHERE name = ?");
             statement.setString(1, client.getPassword());
-            statement.setString(2, client.getLogin());
+            statement.setString(2, client.getEmail());
+            statement.setString(3, client.getLogin());
             int result = statement.executeUpdate();
             return result;
         } catch (SQLException e) {
@@ -104,7 +108,7 @@ public class UserDao {
     public static Optional<Client> getClientByName(String name) {
         try {
             PreparedStatement statement = connection.prepareStatement(
-                    "SELECT users.password, users.email, roles.role FROM users inner join " +
+                    "SELECT users.password, users.email, roles.role, users.salt FROM users inner join " +
                             "roles on users.role_id = roles.id WHERE name = ?");
             statement.setString(1, name);
             ResultSet resultSet = statement.executeQuery();
@@ -113,7 +117,8 @@ public class UserDao {
                 String password = resultSet.getString("password");
                 String role = resultSet.getString("role");
                 String email = resultSet.getString("email");
-                newClient = new Client(name, password, email, Client.Role.valueOf(role));
+                String salt = resultSet.getString("salt");
+                newClient = new Client(name, password, email, Client.Role.valueOf(role), salt);
                 return Optional.of(newClient);
             }
 
