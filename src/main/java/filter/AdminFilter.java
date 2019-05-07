@@ -12,7 +12,8 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-@WebFilter(value = {"/admin/*", "/clientList/*", "/editClient/*", "/editTable/*", "/productList/*"})
+@WebFilter(value = {"/admin/*", "/clientList/*", "/editClient/*", "/editTable/*", "/productList/*",
+                    "/add/*", })
 public class AdminFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {

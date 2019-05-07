@@ -41,7 +41,9 @@ public class DeleteServlet extends HttpServlet {
         Long productId = Long.parseLong(req.getParameter("productId"));
         Product deleteProduct = ProductDao.getProductById(productId).get();
         int result = ProductDao.deleteProduct(productId);
-        if (result > 0) resp.sendRedirect("productList");
+        if (result > 0) {
+            resp.sendRedirect("productList");
+        }
         else {
             req.setAttribute("error", "Error, can't delete " + deleteProduct);
             req.getRequestDispatcher("productList.jsp").forward(req, resp);
