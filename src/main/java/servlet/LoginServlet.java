@@ -1,5 +1,6 @@
 package servlet;
 
+import dao.SqlUserDao;
 import dao.UserDao;
 import model.Client;
 import utils.HashPassword;
@@ -16,6 +17,8 @@ import java.util.Optional;
 @WebServlet(value = "/login")
 public class LoginServlet extends HttpServlet {
 
+    private static final UserDao sqlUserDao = new SqlUserDao();
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         req.setCharacterEncoding("UTF-8");
@@ -24,7 +27,7 @@ public class LoginServlet extends HttpServlet {
 
         String login = req.getParameter("login");
         String password = req.getParameter("password");
-        Client client = getClientFromOptional(UserDao.getClientByName(login), req, resp);
+        Client client = getClientFromOptional(sqlUserDao.getClientByLogin(login), req, resp);
         String hashedPassword = HashPassword.getSecurePassword(password, client.getSalt());
             if (client.getPassword().equals(hashedPassword)) {
                 req.getSession().setAttribute("client", client);

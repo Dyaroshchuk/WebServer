@@ -11,11 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class ProductDao {
+public class SqlProductDao implements ProductDao {
 
     private static final Connection connection = DbConnector.connect();
 
-    public static int addProduct(Product product) {
+    @Override
+    public int addProduct(Product product) {
         try {
             PreparedStatement statement = connection.prepareStatement(
                     "INSERT INTO products(name, description, price) VALUES (?, ?, ?)");
@@ -31,7 +32,8 @@ public class ProductDao {
         }
     }
 
-    public static List<Product> getAllProducts() {
+    @Override
+    public List<Product> getAllProducts() {
         List<Product> products = new ArrayList<>();
 
         try {
@@ -52,7 +54,8 @@ public class ProductDao {
         return products;
     }
 
-    public static int deleteProduct(Long id) {
+    @Override
+    public int deleteProduct(Long id) {
         try {
             PreparedStatement statement = connection.prepareStatement(
                     "DELETE FROM products WHERE id = ?");
@@ -65,7 +68,8 @@ public class ProductDao {
         }
     }
 
-    public static int editProduct(Product product) {
+    @Override
+    public int editProduct(Product product) {
         try {
             PreparedStatement statement = connection.prepareStatement(
                     "UPDATE products SET name = ?, description = ?, price = ? WHERE id = ?");
@@ -81,7 +85,8 @@ public class ProductDao {
         }
     }
 
-    public static Optional<Product> getProductById(Long id) {
+    @Override
+    public Optional<Product> getProductById(Long id) {
         try {
             PreparedStatement statement = connection.prepareStatement(
                     "SELECT name, description, price FROM products WHERE id = ?");

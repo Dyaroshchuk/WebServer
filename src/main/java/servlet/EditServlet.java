@@ -1,6 +1,8 @@
 package servlet;
 
 import dao.ProductDao;
+import dao.SqlProductDao;
+import dao.SqlUserDao;
 import dao.UserDao;
 import model.Client;
 import model.Product;
@@ -11,9 +13,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Optional;
 
 @WebServlet("/edit")
 public class EditServlet extends HttpServlet {
+
+    private static final UserDao sqlUserDao = new SqlUserDao();
+    private static final ProductDao sqlProductDao = new SqlProductDao();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -31,13 +37,14 @@ public class EditServlet extends HttpServlet {
     }
 
     private static void saveClientChanges(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        String login = req.getParameter("login");
-        String password = req.getParameter("password");
-        String email = req.getParameter("email");
+        Long clientId = Long.parseLong(req.getParameter("clientId"));
+        Optional<Client> clientFromDB = sqlUserDao.getClientById(clientId);
+        Client editingClient = clientFromDB.get();
+        editingClient.setLogin(req.getParameter("login"));
+        editingClient.setPassword(req.getParameter("password"));
+        editingClient.setEmail(req.getParameter("email"));
 
-        Client editingClient = new Client(login, password, email);
-
-        int result = UserDao.editClient(editingClient);
+        int result = sqlUserDao.editClient(editingClient);
         if (result > 0) {
             resp.sendRedirect("clientList");
         } else {
@@ -52,7 +59,7 @@ public class EditServlet extends HttpServlet {
         String description = req.getParameter("description");
         Double price = Double.parseDouble(req.getParameter("price"));
         Product product = new Product(productId, name, description, price);
-        int result = ProductDao.editProduct(product);
+        int result = sqlProductDao.editProduct(product);
         if (result > 0) {
             resp.sendRedirect("productList");
         } else {

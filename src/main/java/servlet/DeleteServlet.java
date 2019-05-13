@@ -1,6 +1,8 @@
 package servlet;
 
 import dao.ProductDao;
+import dao.SqlProductDao;
+import dao.SqlUserDao;
 import dao.UserDao;
 import model.Product;
 
@@ -14,9 +16,12 @@ import java.io.IOException;
 @WebServlet("/delete")
 public class DeleteServlet extends HttpServlet {
 
+    private static final UserDao sqlUserDao = new SqlUserDao();
+    private static final ProductDao sqlProductDao = new SqlProductDao();
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if (req.getParameter("name") != null) {
+        if (req.getParameter("clientId") != null) {
             deleteClient(req, resp);
         } else if (req.getParameter("productId") != null) {
             deleteProduct(req, resp);
@@ -27,20 +32,20 @@ public class DeleteServlet extends HttpServlet {
     }
 
     private static void deleteClient(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        String clientName = req.getParameter("name");
-        int result = UserDao.deleteClient(clientName);
+        Long clientId = Long.parseLong(req.getParameter("clientId"));
+        int result = sqlUserDao.deleteClient(clientId);
         if (result > 0) {
             resp.sendRedirect("clientList");
         } else {
-            req.setAttribute("error", "Error, can't delete " + clientName);
+            req.setAttribute("error", "Error, can't delete " + clientId);
             req.getRequestDispatcher("clientList.jsp").forward(req, resp);
         }
     }
 
     private static void deleteProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long productId = Long.parseLong(req.getParameter("productId"));
-        Product deleteProduct = ProductDao.getProductById(productId).get();
-        int result = ProductDao.deleteProduct(productId);
+        Product deleteProduct = sqlProductDao.getProductById(productId).get();
+        int result = sqlProductDao.deleteProduct(productId);
         if (result > 0) {
             resp.sendRedirect("productList");
         }

@@ -2,6 +2,7 @@ package servlet;
 
 import dao.CodeDao;
 import dao.ProductDao;
+import dao.SqlProductDao;
 import model.BuyCodeConfirmation;
 import model.Client;
 import model.Product;
@@ -18,6 +19,8 @@ import java.io.IOException;
 @WebServlet("/buy")
 public class BuyProductServlet extends HttpServlet {
 
+        private static final ProductDao sqlProductDao = new SqlProductDao();
+
     private static final MailService mailService = new MailService();
 
     @Override
@@ -30,7 +33,7 @@ public class BuyProductServlet extends HttpServlet {
         String codeValue = req.getParameter("buyCodeConfirmation");
         BuyCodeConfirmation buyCodeConfirmation = new BuyCodeConfirmation(codeValue, client.getLogin(), productId);
         if (CodeDao.checkCode(buyCodeConfirmation)) {
-            Product product = ProductDao.getProductById(productId).get();
+            Product product = sqlProductDao.getProductById(productId).get();
             req.setAttribute("approved", "You are successful buy " + product.getName());
             req.getRequestDispatcher("/product").forward(req, resp);
         } else {

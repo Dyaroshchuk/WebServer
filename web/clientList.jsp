@@ -12,17 +12,19 @@
 <h3><c:out value="${message}"></c:out></h3>
 <table border='1' width='100%'>
     <tr>
+        <th>ID</th>
         <th>Name</th>
         <th>Password</th>
         <th>Email</th>
         <th>Edit</th>
         <th>Delete</th>
     <c:forEach var="client" items ="${clients}" >
-    <tr><td>${client.getLogin()}</td>
+    <tr><td>${client.getId()}</td>
+    <td>${client.getLogin()}</td>
     <td>${client.getPassword()}</td>
     <td>${client.getEmail()}</td>
-    <td><a href="editTable?name=${client.getLogin()}">edit</a></td>
-        <td><a href="delete?name=${client.getLogin()}">delete</a> </td>
+    <td><a href="editTable?clientId=${client.getId()}">edit</a></td>
+        <td><a href="delete?clientId=${client.getId()}">delete</a> </td>
     </tr>
     </c:forEach>
 </table>

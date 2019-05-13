@@ -1,6 +1,8 @@
 package servlet;
 
 import dao.ProductDao;
+import dao.SqlProductDao;
+import dao.SqlUserDao;
 import dao.UserDao;
 import model.Client;
 import model.Product;
@@ -14,6 +16,9 @@ import java.io.IOException;
 
 @WebServlet("/add")
 public class AddServlet extends HttpServlet {
+
+    private static final UserDao sqlUserDao = new SqlUserDao();
+    private static final ProductDao sqlProductDao = new SqlProductDao();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -43,7 +48,7 @@ public class AddServlet extends HttpServlet {
         Long role = Long.parseLong(req.getParameter("role"));
 
         Client client = new Client(login, password, email, role);
-        int result = UserDao.addClient(client);
+        int result = sqlUserDao.addClient(client);
         if (result > 0) {
             req.setAttribute("message", "The client " + login + " was added");
             req.getRequestDispatcher("clientList").forward(req, resp);
@@ -58,7 +63,7 @@ public class AddServlet extends HttpServlet {
         String description = req.getParameter("description");
         Double price = Double.parseDouble(req.getParameter("price"));
         Product product = new Product(name, description, price);
-        int result = ProductDao.addProduct(product);
+        int result = sqlProductDao.addProduct(product);
         if (result > 0) {
             req.setAttribute("message", "The product " + name + " was added");
             req.getRequestDispatcher("productList").forward(req, resp);

@@ -12,18 +12,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class UserDao {
+public class SqlUserDao implements UserDao {
 
     private static final Connection connection = DbConnector.connect();
 
-    public static int addClient(Client client) {
+    @Override
+    public int addClient(Client client) {
         try {
             PreparedStatement statement = connection.prepareStatement(
                     "INSERT INTO users(name, password, email, role_id, salt) VALUES (?, ?, ?, ?, ?)");
             statement.setString(1, client.getLogin());
             statement.setString(2, HashPassword.getSecurePassword(client.getPassword(), client.getSalt()));
             statement.setString(3, client.getEmail());
-            statement.setLong(4, client.getRole_id());
+            statement.setLong(4, client.getRoleId());
             statement.setString(5, client.getSalt());
             int status = statement.executeUpdate();
             statement.close();
@@ -57,7 +58,8 @@ public class UserDao {
         return result;
     }
 
-    public static List<Client> getAllClients() {
+    @Override
+    public List<Client> getAllClients() {
         List<Client> clients = new ArrayList<>();
 
         try {
@@ -66,6 +68,7 @@ public class UserDao {
             ResultSet resultSet = statement.executeQuery(sql);
             while (resultSet.next()) {
                 Client getClient = new Client();
+                getClient.setId(resultSet.getLong("id"));
                 getClient.setLogin(resultSet.getString("name"));
                 getClient.setPassword(resultSet.getString("password"));
                 getClient.setEmail(resultSet.getString("email"));
@@ -77,11 +80,12 @@ public class UserDao {
         return clients;
     }
 
-    public static int deleteClient(String name) {
+    @Override
+    public int deleteClient(Long id) {
         try {
             PreparedStatement statement = connection.prepareStatement(
-                    "DELETE FROM users WHERE name = ?");
-            statement.setString(1, name);
+                    "DELETE FROM users WHERE id = ?");
+            statement.setLong(1, id);
             int result = statement.executeUpdate();
             return result;
         } catch (SQLException e) {
@@ -90,13 +94,15 @@ public class UserDao {
         }
     }
 
-    public static int editClient(Client client) {
+    @Override
+    public int editClient(Client client) {
         try {
             PreparedStatement statement = connection.prepareStatement(
-                    "UPDATE users SET password = ?, email = ? WHERE name = ?");
-            statement.setString(1, client.getPassword());
-            statement.setString(2, client.getEmail());
-            statement.setString(3, client.getLogin());
+                    "UPDATE users SET name = ?, password = ?, email = ? WHERE id = ?");
+            statement.setString(1, client.getLogin());
+            statement.setString(2, HashPassword.getSecurePassword(client.getPassword(), client.getSalt()));
+            statement.setString(3, client.getEmail());
+            statement.setLong(4, client.getId());
             int result = statement.executeUpdate();
             return result;
         } catch (SQLException e) {
@@ -105,20 +111,47 @@ public class UserDao {
         }
     }
 
-    public static Optional<Client> getClientByName(String name) {
+    @Override
+    public Optional<Client> getClientById(Long id) {
         try {
             PreparedStatement statement = connection.prepareStatement(
-                    "SELECT users.password, users.email, roles.role, users.salt FROM users inner join " +
-                            "roles on users.role_id = roles.id WHERE name = ?");
-            statement.setString(1, name);
+                    "SELECT users.name, users.password, users.email, roles.role, users.salt FROM users inner join " +
+                            "roles on users.role_id = roles.id WHERE users.id = ?");
+            statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
             Client newClient;
             if (resultSet.next()) {
+                String name = resultSet.getString("name");
                 String password = resultSet.getString("password");
                 String role = resultSet.getString("role");
                 String email = resultSet.getString("email");
                 String salt = resultSet.getString("salt");
-                newClient = new Client(name, password, email, Client.Role.valueOf(role), salt);
+                newClient = new Client(id, name, password, email, Client.Role.valueOf(role), salt);
+                return Optional.of(newClient);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Client> getClientByLogin(String login) {
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    "SELECT users.id, users.password, users.email, roles.role, users.salt FROM users inner join " +
+                            "roles on users.role_id = roles.id WHERE name = ?");
+            statement.setString(1, login);
+            ResultSet resultSet = statement.executeQuery();
+            Client newClient;
+            if (resultSet.next()) {
+                Long id = resultSet.getLong("id");
+                String password = resultSet.getString("password");
+                String role = resultSet.getString("role");
+                String email = resultSet.getString("email");
+                String salt = resultSet.getString("salt");
+                newClient = new Client(id, login, password, email, Client.Role.valueOf(role), salt);
                 return Optional.of(newClient);
             }
 

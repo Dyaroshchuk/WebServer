@@ -1,5 +1,8 @@
 package servlet;
 
+import dao.ProductDao;
+import dao.SqlProductDao;
+import dao.SqlUserDao;
 import dao.UserDao;
 import model.Client;
 
@@ -14,6 +17,9 @@ import java.io.IOException;
 @WebServlet(value = "/registration")
 public class RegistrationServlet extends HttpServlet {
 
+    private static final UserDao sqlUserDao = new SqlUserDao();
+    private static final ProductDao sqlProductDao = new SqlProductDao();
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 
@@ -22,7 +28,7 @@ public class RegistrationServlet extends HttpServlet {
         String email = req.getParameter("email");
         Client newClient = new Client(login, password, email, 2L);
 
-        if (UserDao.addClient(newClient) > 0) {
+        if (sqlUserDao.addClient(newClient) > 0) {
             req.setAttribute("login", login);
             req.getRequestDispatcher("index.jsp").forward(req, resp);
         } else {
