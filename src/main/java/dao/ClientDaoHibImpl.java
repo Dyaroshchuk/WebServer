@@ -3,6 +3,7 @@ package dao;
 import model.Client;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
@@ -78,18 +79,23 @@ public class ClientDaoHibImpl implements DaoHibImpl<Client> {
 
     @Override
     public Optional<Client> get(String login) {
-        Session session;
-        try {
-            session = HibernateSessionFactory.getSessionFactory().getCurrentSession();
-        } catch (Exception e) {
-            session = HibernateSessionFactory.getSessionFactory().openSession();
-        }
-        try {
-            Criteria criteria = session.createCriteria(Client.class);
-            Client client = (Client) criteria.add(Restrictions.eq("login", login)).uniqueResult();
-            return Optional.of(client);
-        } catch (Exception e) {
-            return Optional.empty();
-        }
+            Session session;
+            try {
+                session = HibernateSessionFactory.getSessionFactory().getCurrentSession();
+            } catch (Exception e) {
+                session = HibernateSessionFactory.getSessionFactory().openSession();
+            }
+            try {
+                Query queryFindByLogin = session.createQuery("from Client where login = :login");
+                queryFindByLogin.setParameter("login", login);
+                List<Client> findUserByLogin = queryFindByLogin.list();
+                if (findUserByLogin.size() == 0) {
+                    return Optional.empty();
+                } else {
+                    return Optional.of(findUserByLogin.get(0));
+                }
+            } catch (Exception e) {
+                return Optional.empty();
+            }
     }
 }
