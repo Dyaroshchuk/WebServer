@@ -1,5 +1,6 @@
 package utils;
 
+import model.BuyCodeConfirmation;
 import model.Client;
 import model.Product;
 import org.hibernate.SessionFactory;
@@ -10,12 +11,17 @@ public class HibernateSessionFactory {
 
     private static SessionFactory sessionFactory;
 
+    public HibernateSessionFactory() {
+
+    }
+
     public static SessionFactory getSessionFactory() {
         if (sessionFactory == null) {
             try {
                 Configuration configuration = new Configuration().configure();
-                configuration.addAnnotatedClass(Client.class);
                 configuration.addAnnotatedClass(Product.class);
+                configuration.addAnnotatedClass(Client.class);
+                configuration.addAnnotatedClass(BuyCodeConfirmation.class);
                 StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
                 sessionFactory = configuration.buildSessionFactory(builder.build());
 

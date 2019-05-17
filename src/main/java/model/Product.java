@@ -1,5 +1,6 @@
 package model;
 
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,7 +15,7 @@ public class Product {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "name")
@@ -25,6 +26,9 @@ public class Product {
 
     @Column(name = "price")
     private double price;
+
+    public Product() {
+    }
 
     public Product(Long id, String name, String description, double price) {
         this.id = id;
@@ -37,9 +41,6 @@ public class Product {
         this.name = name;
         this.description = description;
         this.price = price;
-    }
-
-    public Product() {
     }
 
     public Long getId() {

@@ -1,9 +1,8 @@
 package servlet;
 
-import dao.ProductDao;
-import dao.SqlProductDao;
-import dao.SqlUserDao;
-import dao.UserDao;
+import dao.ClientDaoHibImpl;
+import dao.DaoHibImpl;
+import dao.ProductDaoHibImpl;
 import model.Client;
 import model.Product;
 
@@ -17,8 +16,8 @@ import java.io.IOException;
 @WebServlet("/add")
 public class AddServlet extends HttpServlet {
 
-    private static final UserDao sqlUserDao = new SqlUserDao();
-    private static final ProductDao sqlProductDao = new SqlProductDao();
+    private static final DaoHibImpl clientDaoHib = new ClientDaoHibImpl();
+    private static final DaoHibImpl productDaoHib = new ProductDaoHibImpl();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -27,9 +26,6 @@ public class AddServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setCharacterEncoding("UTF-8");
-        resp.setCharacterEncoding("UTF-8");
-        resp.setContentType("text/html");
 
         if (req.getParameter("login") != null) {
             addClient(req, resp);
@@ -45,16 +41,16 @@ public class AddServlet extends HttpServlet {
         String login = req.getParameter("login");
         String password = req.getParameter("password");
         String email = req.getParameter("email");
-        Long role = Long.parseLong(req.getParameter("role"));
+        String role = req.getParameter("role");
 
         Client client = new Client(login, password, email, role);
-        int result = sqlUserDao.addClient(client);
+        int result = clientDaoHib.add(client);
         if (result > 0) {
             req.setAttribute("message", "The client " + login + " was added");
             req.getRequestDispatcher("clientList").forward(req, resp);
         } else {
             req.setAttribute("message", "The client " + login + " already exists");
-            req.getRequestDispatcher("addClient.jsp").forward(req, resp);
+            req.getRequestDispatcher("add.jsp").forward(req, resp);
         }
     }
 
@@ -63,13 +59,13 @@ public class AddServlet extends HttpServlet {
         String description = req.getParameter("description");
         Double price = Double.parseDouble(req.getParameter("price"));
         Product product = new Product(name, description, price);
-        int result = sqlProductDao.addProduct(product);
+        int result = productDaoHib.add(product);
         if (result > 0) {
             req.setAttribute("message", "The product " + name + " was added");
             req.getRequestDispatcher("productList").forward(req, resp);
         } else {
             req.setAttribute("message", "We can't add product " + name);
-            req.getRequestDispatcher("addProduct.jsp").forward(req, resp);
+            req.getRequestDispatcher("add.jsp").forward(req, resp);
         }
     }
 }

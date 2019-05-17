@@ -1,9 +1,8 @@
 package servlet;
 
-import dao.ProductDao;
-import dao.SqlProductDao;
-import dao.SqlUserDao;
-import dao.UserDao;
+import dao.ClientDaoHibImpl;
+import dao.DaoHibImpl;
+import dao.ProductDaoHibImpl;
 import model.Client;
 import model.Product;
 
@@ -18,14 +17,12 @@ import java.util.Optional;
 @WebServlet("/edit")
 public class EditServlet extends HttpServlet {
 
-    private static final UserDao sqlUserDao = new SqlUserDao();
-    private static final ProductDao sqlProductDao = new SqlProductDao();
+    private static final DaoHibImpl clientDaoHib = new ClientDaoHibImpl();
+    private static final DaoHibImpl productDaoHib = new ProductDaoHibImpl();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setCharacterEncoding("UTF-8");
-        resp.setCharacterEncoding("UTF-8");
-        resp.setContentType("text/html");
+
         if (req.getParameter("login") != null) {
             saveClientChanges(req, resp);
         } else if (req.getParameter("productId") != null) {
@@ -38,13 +35,13 @@ public class EditServlet extends HttpServlet {
 
     private static void saveClientChanges(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         Long clientId = Long.parseLong(req.getParameter("clientId"));
-        Optional<Client> clientFromDB = sqlUserDao.getClientById(clientId);
+        Optional<Client> clientFromDB = clientDaoHib.get(clientId);
         Client editingClient = clientFromDB.get();
         editingClient.setLogin(req.getParameter("login"));
         editingClient.setPassword(req.getParameter("password"));
         editingClient.setEmail(req.getParameter("email"));
 
-        int result = sqlUserDao.editClient(editingClient);
+        int result = clientDaoHib.edit(editingClient);
         if (result > 0) {
             resp.sendRedirect("clientList");
         } else {
@@ -59,7 +56,7 @@ public class EditServlet extends HttpServlet {
         String description = req.getParameter("description");
         Double price = Double.parseDouble(req.getParameter("price"));
         Product product = new Product(productId, name, description, price);
-        int result = sqlProductDao.editProduct(product);
+        int result = productDaoHib.edit(product);
         if (result > 0) {
             resp.sendRedirect("productList");
         } else {

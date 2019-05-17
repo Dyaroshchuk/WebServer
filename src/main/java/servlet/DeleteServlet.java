@@ -1,9 +1,8 @@
 package servlet;
 
-import dao.ProductDao;
-import dao.SqlProductDao;
-import dao.SqlUserDao;
-import dao.UserDao;
+import dao.ClientDaoHibImpl;
+import dao.DaoHibImpl;
+import dao.ProductDaoHibImpl;
 import model.Product;
 
 import javax.servlet.ServletException;
@@ -16,8 +15,8 @@ import java.io.IOException;
 @WebServlet("/delete")
 public class DeleteServlet extends HttpServlet {
 
-    private static final UserDao sqlUserDao = new SqlUserDao();
-    private static final ProductDao sqlProductDao = new SqlProductDao();
+    private static final DaoHibImpl clientDaoHib = new ClientDaoHibImpl();
+    private static final DaoHibImpl productDaoHib = new ProductDaoHibImpl();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -33,7 +32,7 @@ public class DeleteServlet extends HttpServlet {
 
     private static void deleteClient(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         Long clientId = Long.parseLong(req.getParameter("clientId"));
-        int result = sqlUserDao.deleteClient(clientId);
+        int result = clientDaoHib.delete(clientId);
         if (result > 0) {
             resp.sendRedirect("clientList");
         } else {
@@ -44,12 +43,11 @@ public class DeleteServlet extends HttpServlet {
 
     private static void deleteProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long productId = Long.parseLong(req.getParameter("productId"));
-        Product deleteProduct = sqlProductDao.getProductById(productId).get();
-        int result = sqlProductDao.deleteProduct(productId);
+        Product deleteProduct = (Product) productDaoHib.get(productId).get();
+        int result = productDaoHib.delete(productId);
         if (result > 0) {
             resp.sendRedirect("productList");
-        }
-        else {
+        } else {
             req.setAttribute("error", "Error, can't delete " + deleteProduct);
             req.getRequestDispatcher("productList.jsp").forward(req, resp);
         }

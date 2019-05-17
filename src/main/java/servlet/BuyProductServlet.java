@@ -1,8 +1,8 @@
 package servlet;
 
-import dao.CodeDao;
-import dao.ProductDao;
-import dao.SqlProductDao;
+import dao.CodeDaoHibImpl;
+import dao.DaoHibImpl;
+import dao.ProductDaoHibImpl;
 import model.BuyCodeConfirmation;
 import model.Client;
 import model.Product;
@@ -15,25 +15,24 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Optional;
 
 @WebServlet("/buy")
 public class BuyProductServlet extends HttpServlet {
 
-        private static final ProductDao sqlProductDao = new SqlProductDao();
-
+    private static final DaoHibImpl productDaoHib = new ProductDaoHibImpl();
+    private static final DaoHibImpl codeDaoHib = new CodeDaoHibImpl();
     private static final MailService mailService = new MailService();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setCharacterEncoding("UTF-8");
-        resp.setCharacterEncoding("UTF-8");
-        resp.setContentType("text/html");
         Long productId = Long.parseLong(req.getParameter("good_id"));
         Client client = (Client) req.getSession().getAttribute("client");
         String codeValue = req.getParameter("buyCodeConfirmation");
         BuyCodeConfirmation buyCodeConfirmation = new BuyCodeConfirmation(codeValue, client.getLogin(), productId);
-        if (CodeDao.checkCode(buyCodeConfirmation)) {
-            Product product = sqlProductDao.getProductById(productId).get();
+        Optional<BuyCodeConfirmation> codeFromeDB = codeDaoHib.get(codeValue);
+        if (codeFromeDB.isPresent() && codeFromeDB.equals(Optional.of(buyCodeConfirmation))) {
+            Product product = (Product) productDaoHib.get(productId).get();
             req.setAttribute("approved", "You are successful buy " + product.getName());
             req.getRequestDispatcher("/product").forward(req, resp);
         } else {
@@ -51,7 +50,7 @@ public class BuyProductServlet extends HttpServlet {
         String randomCode = RandomHelper.getRandomCode();
         mailService.sendMail(client.getEmail(), randomCode);
         BuyCodeConfirmation buyCodeConfirmation = new BuyCodeConfirmation(randomCode, client.getLogin(), productId);
-        CodeDao.addProduct(buyCodeConfirmation);
+        codeDaoHib.add(buyCodeConfirmation);
         req.setAttribute("productId", productId);
         req.getRequestDispatcher("buyConfirmation.jsp").forward(req, resp);
     }

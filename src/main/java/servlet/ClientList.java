@@ -1,7 +1,7 @@
 package servlet;
 
-import dao.SqlUserDao;
-import dao.UserDao;
+import dao.ClientDaoHibImpl;
+import dao.DaoHibImpl;
 import model.Client;
 
 import javax.servlet.ServletException;
@@ -15,11 +15,11 @@ import java.util.List;
 @WebServlet("/clientList")
 public class ClientList extends HttpServlet {
 
-    private static final UserDao sqlUserDao = new SqlUserDao();
+    private static final DaoHibImpl clientDaoHib = new ClientDaoHibImpl();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<Client> clients = sqlUserDao.getAllClients();
+        List<Client> clients = clientDaoHib.getAll();
         req.setAttribute("clients", clients);
         req.getRequestDispatcher("clientList.jsp").forward(req, resp);
     }
