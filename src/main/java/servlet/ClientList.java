@@ -15,11 +15,11 @@ import java.util.List;
 @WebServlet("/clientList")
 public class ClientList extends HttpServlet {
 
-    private static final DaoHibImpl clientDaoHib = new ClientDaoHibImpl();
+    private static final DaoHibImpl CLIENT_DAO_HIB = new ClientDaoHibImpl();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<Client> clients = clientDaoHib.getAll();
+        List<Client> clients = CLIENT_DAO_HIB.getAll();
         req.setAttribute("clients", clients);
         req.getRequestDispatcher("clientList.jsp").forward(req, resp);
     }

@@ -17,8 +17,8 @@ import java.util.Optional;
 @WebServlet("/edit")
 public class EditServlet extends HttpServlet {
 
-    private static final DaoHibImpl clientDaoHib = new ClientDaoHibImpl();
-    private static final DaoHibImpl productDaoHib = new ProductDaoHibImpl();
+    private static final DaoHibImpl CLIENT_DAO_HIB = new ClientDaoHibImpl();
+    private static final DaoHibImpl PRODUCT_DAO_HIB = new ProductDaoHibImpl();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -35,18 +35,18 @@ public class EditServlet extends HttpServlet {
 
     private static void saveClientChanges(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         Long clientId = Long.parseLong(req.getParameter("clientId"));
-        Optional<Client> clientFromDB = clientDaoHib.get(clientId);
+        Optional<Client> clientFromDB = CLIENT_DAO_HIB.get(clientId);
         Client editingClient = clientFromDB.get();
         editingClient.setLogin(req.getParameter("login"));
         editingClient.setPassword(req.getParameter("password"));
         editingClient.setEmail(req.getParameter("email"));
 
-        int result = clientDaoHib.edit(editingClient);
+        int result = CLIENT_DAO_HIB.edit(editingClient);
         if (result > 0) {
-            resp.sendRedirect("clientList");
+            resp.sendRedirect("/clientList");
         } else {
             req.setAttribute("error", "we couldn't change client name");
-            req.getRequestDispatcher("clientList").forward(req, resp);
+            req.getRequestDispatcher("/clientList").forward(req, resp);
         }
     }
 
@@ -56,12 +56,12 @@ public class EditServlet extends HttpServlet {
         String description = req.getParameter("description");
         Double price = Double.parseDouble(req.getParameter("price"));
         Product product = new Product(productId, name, description, price);
-        int result = productDaoHib.edit(product);
+        int result = PRODUCT_DAO_HIB.edit(product);
         if (result > 0) {
-            resp.sendRedirect("productList");
+            resp.sendRedirect("/productList");
         } else {
             req.setAttribute("error", "we couldn't change client name");
-            req.getRequestDispatcher("productList").forward(req, resp);
+            req.getRequestDispatcher("/productList").forward(req, resp);
         }
 
     }

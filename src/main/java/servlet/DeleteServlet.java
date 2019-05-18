@@ -15,8 +15,8 @@ import java.io.IOException;
 @WebServlet("/delete")
 public class DeleteServlet extends HttpServlet {
 
-    private static final DaoHibImpl clientDaoHib = new ClientDaoHibImpl();
-    private static final DaoHibImpl productDaoHib = new ProductDaoHibImpl();
+    private static final DaoHibImpl CLIENT_DAO_HIB = new ClientDaoHibImpl();
+    private static final DaoHibImpl PRODUCT_DAO_HIB = new ProductDaoHibImpl();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -32,7 +32,7 @@ public class DeleteServlet extends HttpServlet {
 
     private static void deleteClient(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         Long clientId = Long.parseLong(req.getParameter("clientId"));
-        int result = clientDaoHib.delete(clientId);
+        int result = CLIENT_DAO_HIB.delete(clientId);
         if (result > 0) {
             resp.sendRedirect("clientList");
         } else {
@@ -43,8 +43,8 @@ public class DeleteServlet extends HttpServlet {
 
     private static void deleteProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long productId = Long.parseLong(req.getParameter("productId"));
-        Product deleteProduct = (Product) productDaoHib.get(productId).get();
-        int result = productDaoHib.delete(productId);
+        Product deleteProduct = (Product) PRODUCT_DAO_HIB.get(productId).get();
+        int result = PRODUCT_DAO_HIB.delete(productId);
         if (result > 0) {
             resp.sendRedirect("productList");
         } else {

@@ -16,8 +16,8 @@ import java.io.IOException;
 @WebServlet("/add")
 public class AddServlet extends HttpServlet {
 
-    private static final DaoHibImpl clientDaoHib = new ClientDaoHibImpl();
-    private static final DaoHibImpl productDaoHib = new ProductDaoHibImpl();
+    private static final DaoHibImpl CLIENT_DAO_HIB = new ClientDaoHibImpl();
+    private static final DaoHibImpl PRODUCT_DAO_HIB = new ProductDaoHibImpl();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -44,7 +44,7 @@ public class AddServlet extends HttpServlet {
         String role = req.getParameter("role");
 
         Client client = new Client(login, password, email, role);
-        int result = clientDaoHib.add(client);
+        int result = CLIENT_DAO_HIB.add(client);
         if (result > 0) {
             req.setAttribute("message", "The client " + login + " was added");
             req.getRequestDispatcher("clientList").forward(req, resp);
@@ -59,7 +59,7 @@ public class AddServlet extends HttpServlet {
         String description = req.getParameter("description");
         Double price = Double.parseDouble(req.getParameter("price"));
         Product product = new Product(name, description, price);
-        int result = productDaoHib.add(product);
+        int result = PRODUCT_DAO_HIB.add(product);
         if (result > 0) {
             req.setAttribute("message", "The product " + name + " was added");
             req.getRequestDispatcher("productList").forward(req, resp);

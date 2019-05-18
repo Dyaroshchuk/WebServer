@@ -15,7 +15,7 @@ import java.io.IOException;
 @WebServlet(value = "/registration")
 public class RegistrationServlet extends HttpServlet {
 
-    private static final DaoHibImpl clientDaoHib = new ClientDaoHibImpl();
+    private static final DaoHibImpl CLIENT_DAO_HIB = new ClientDaoHibImpl();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
@@ -25,7 +25,7 @@ public class RegistrationServlet extends HttpServlet {
         String email = req.getParameter("email");
         Client newClient = new Client(login, password, email, "USER");
 
-        if (clientDaoHib.add(newClient) > 0) {
+        if (CLIENT_DAO_HIB.add(newClient) > 0) {
             req.setAttribute("login", login);
             req.getRequestDispatcher("index.jsp").forward(req, resp);
         } else {

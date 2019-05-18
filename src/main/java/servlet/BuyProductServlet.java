@@ -20,9 +20,9 @@ import java.util.Optional;
 @WebServlet("/buy")
 public class BuyProductServlet extends HttpServlet {
 
-    private static final DaoHibImpl productDaoHib = new ProductDaoHibImpl();
-    private static final DaoHibImpl codeDaoHib = new CodeDaoHibImpl();
-    private static final MailService mailService = new MailService();
+    private static final DaoHibImpl PRODUCT_DAO_HIB = new ProductDaoHibImpl();
+    private static final DaoHibImpl CODE_DAO_HIB = new CodeDaoHibImpl();
+    private static final MailService MAIL_SERVICE = new MailService();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -30,9 +30,9 @@ public class BuyProductServlet extends HttpServlet {
         Client client = (Client) req.getSession().getAttribute("client");
         String codeValue = req.getParameter("buyCodeConfirmation");
         BuyCodeConfirmation buyCodeConfirmation = new BuyCodeConfirmation(codeValue, client.getLogin(), productId);
-        Optional<BuyCodeConfirmation> codeFromeDB = codeDaoHib.get(codeValue);
+        Optional<BuyCodeConfirmation> codeFromeDB = CODE_DAO_HIB.get(codeValue);
         if (codeFromeDB.isPresent() && codeFromeDB.equals(Optional.of(buyCodeConfirmation))) {
-            Product product = (Product) productDaoHib.get(productId).get();
+            Product product = (Product) PRODUCT_DAO_HIB.get(productId).get();
             req.setAttribute("approved", "You are successful buy " + product.getName());
             req.getRequestDispatcher("/product").forward(req, resp);
         } else {
@@ -48,9 +48,9 @@ public class BuyProductServlet extends HttpServlet {
         Long productId = Long.parseLong(req.getParameter("id"));
         Client client = (Client) req.getSession().getAttribute("client");
         String randomCode = RandomHelper.getRandomCode();
-        mailService.sendMail(client.getEmail(), randomCode);
+        MAIL_SERVICE.sendMail(client.getEmail(), randomCode);
         BuyCodeConfirmation buyCodeConfirmation = new BuyCodeConfirmation(randomCode, client.getLogin(), productId);
-        codeDaoHib.add(buyCodeConfirmation);
+        CODE_DAO_HIB.add(buyCodeConfirmation);
         req.setAttribute("productId", productId);
         req.getRequestDispatcher("buyConfirmation.jsp").forward(req, resp);
     }

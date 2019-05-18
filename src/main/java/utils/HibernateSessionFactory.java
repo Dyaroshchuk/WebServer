@@ -3,12 +3,14 @@ package utils;
 import model.BuyCodeConfirmation;
 import model.Client;
 import model.Product;
+import org.apache.log4j.Logger;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 
 public class HibernateSessionFactory {
 
+    private static final Logger LOGGER = Logger.getLogger(HibernateSessionFactory.class);
     private static SessionFactory sessionFactory;
 
     public HibernateSessionFactory() {
@@ -26,7 +28,7 @@ public class HibernateSessionFactory {
                 sessionFactory = configuration.buildSessionFactory(builder.build());
 
             } catch (Exception e) {
-                System.out.println("Исключение!" + e);
+                LOGGER.error("Error", e);
             }
         }
         return sessionFactory;

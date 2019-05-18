@@ -17,14 +17,14 @@ import java.util.Optional;
 @WebServlet(value = "/login")
 public class LoginServlet extends HttpServlet {
 
-    private static final DaoHibImpl clientDaoHib = new ClientDaoHibImpl();
+    private static final DaoHibImpl CLIENT_DAO_HIB = new ClientDaoHibImpl();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 
         String login = req.getParameter("login");
         String password = req.getParameter("password");
-        Client client = getClientFromOptional(clientDaoHib.get(login), req, resp);
+        Client client = getClientFromOptional(CLIENT_DAO_HIB.get(login), req, resp);
         String hashedPassword = HashPassword.getSecurePassword(password, client.getSalt());
         if (client.getPassword().equals(hashedPassword)) {
             req.getSession().setAttribute("client", client);

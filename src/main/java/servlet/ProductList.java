@@ -15,11 +15,11 @@ import java.util.List;
 @WebServlet("/productList")
 public class ProductList extends HttpServlet {
 
-    private static final DaoHibImpl productDaoHib = new ProductDaoHibImpl();
+    private static final DaoHibImpl PRODUCT_DAO_HIB = new ProductDaoHibImpl();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<Product> products = productDaoHib.getAll();
+        List<Product> products = PRODUCT_DAO_HIB.getAll();
         req.setAttribute("products", products);
         req.getRequestDispatcher("productList.jsp").forward(req, resp);
     }
