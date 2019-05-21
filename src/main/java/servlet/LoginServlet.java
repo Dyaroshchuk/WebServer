@@ -1,6 +1,7 @@
 package servlet;
 
-import dao.UserDao;
+import dao.ClientDaoHibImpl;
+import dao.DaoHibImpl;
 import model.Client;
 import utils.HashPassword;
 
@@ -16,23 +17,22 @@ import java.util.Optional;
 @WebServlet(value = "/login")
 public class LoginServlet extends HttpServlet {
 
+    private static final DaoHibImpl CLIENT_DAO_HIB = new ClientDaoHibImpl();
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        req.setCharacterEncoding("UTF-8");
-        resp.setCharacterEncoding("UTF-8");
-        resp.setContentType("text/html");
 
         String login = req.getParameter("login");
         String password = req.getParameter("password");
-        Client client = getClientFromOptional(UserDao.getClientByName(login), req, resp);
+        Client client = getClientFromOptional(CLIENT_DAO_HIB.get(login), req, resp);
         String hashedPassword = HashPassword.getSecurePassword(password, client.getSalt());
-            if (client.getPassword().equals(hashedPassword)) {
-                req.getSession().setAttribute("client", client);
-                redirectByRole(client, req, resp);
-            } else {
-                req.setAttribute("error", "wrong login or password");
-                req.getRequestDispatcher("index.jsp").forward(req, resp);
-            }
+        if (client.getPassword().equals(hashedPassword)) {
+            req.getSession().setAttribute("client", client);
+            redirectByRole(client, req, resp);
+        } else {
+            req.setAttribute("error", "wrong login or password");
+            req.getRequestDispatcher("index.jsp").forward(req, resp);
+        }
 
     }
 
@@ -45,8 +45,9 @@ public class LoginServlet extends HttpServlet {
             throw new NoSuchElementException("we don't have such client in DB");
         }
     }
-    private static void  redirectByRole(Client client, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if (client.getRole().equals(Client.Role.ADMIN)) {
+
+    private static void redirectByRole(Client client, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if (client.getRole().equals("ADMIN")) {
             req.setAttribute("welcome", client.getLogin() + ", welcome to admin page");
             req.getRequestDispatcher("/admin").forward(req, resp);
         } else {

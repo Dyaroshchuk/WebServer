@@ -2,18 +2,43 @@ package model;
 
 import utils.HashPassword;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Objects;
 
+@Entity
+@Table(name = "users")
 public class Client {
 
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "name")
     private String login;
+
+    @Column(name = "password")
     private String password;
+
+    @Column(name = "email")
     private String email;
-    private Long role_id;
-    private Role role;
+
+    @Column(name = "role")
+    private String role;
+
+    @Column(name = "salt")
     private String salt;
 
-    public Client(String login, String password, String email, Role role, String salt) {
+    public Client() {
+    }
+
+    public Client(Long id, String login, String password, String email, String role, String salt) {
+        this.id = id;
         this.login = login;
         this.password = password;
         this.email = email;
@@ -21,11 +46,11 @@ public class Client {
         this.salt = salt;
     }
 
-    public Client(String login, String password, String email, Long role_id) {
+    public Client(String login, String password, String email, String role) {
         this.login = login;
         this.password = password;
         this.email = email;
-        this.role_id = role_id;
+        this.role = role;
         this.salt = HashPassword.getSalt();
     }
 
@@ -33,9 +58,6 @@ public class Client {
         this.login = login;
         this.password = password;
         this.email = email;
-    }
-
-    public Client() {
     }
 
     public String getLogin() {
@@ -54,19 +76,11 @@ public class Client {
         this.password = password;
     }
 
-    public Long getRole_id() {
-        return role_id;
-    }
-
-    public void setRole_id(Long role_id) {
-        this.role_id = role_id;
-    }
-
-    public Role getRole() {
+    public String getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
+    public void setRole(String role) {
         this.role = role;
     }
 
@@ -86,36 +100,29 @@ public class Client {
         this.email = email;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Client client = (Client) o;
-        return Objects.equals(login, client.login) &&
+        return Objects.equals(id, client.id) &&
+                Objects.equals(login, client.login) &&
                 Objects.equals(password, client.password) &&
                 Objects.equals(email, client.email) &&
-                Objects.equals(role_id, client.role_id) &&
-                role.equals(client.role);
+                Objects.equals(role, client.role) &&
+                Objects.equals(salt, client.salt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(login, password, email, role_id, role);
-    }
-
-    @Override
-    public String toString() {
-        return "Client{" +
-                "login='" + login + '\'' +
-                ", password='" + password + '\'' +
-                ", email='" + email + '\'' +
-                ", role_id=" + role_id +
-                ", role=" + role +
-                '}';
-    }
-
-    public enum Role {
-        USER,
-        ADMIN
+        return Objects.hash(id, login, password, email, role, salt);
     }
 }

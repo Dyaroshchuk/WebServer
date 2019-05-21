@@ -7,7 +7,7 @@
 </head>
 <body>
 <h1>Home Page</h1>
-<form action="login" method="post">
+<form action="/login" method="post">
     login <input type="text" name="login"><br><br>
     password <input type="password" name="password" required="required"><br><br>
     <input type="submit" value="Sign In"/>

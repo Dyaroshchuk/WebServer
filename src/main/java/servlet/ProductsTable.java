@@ -1,6 +1,7 @@
 package servlet;
 
-import dao.ProductDao;
+import dao.DaoHibImpl;
+import dao.ProductDaoHibImpl;
 import model.Product;
 
 import javax.servlet.ServletException;
@@ -14,10 +15,12 @@ import java.util.List;
 @WebServlet("/product")
 public class ProductsTable extends HttpServlet {
 
+    private static final DaoHibImpl PRODUCT_DAO_HIB = new ProductDaoHibImpl();
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<Product> products = ProductDao.getAllProducts();
+        List<Product> products = PRODUCT_DAO_HIB.getAll();
         req.setAttribute("products", products);
-        req.getRequestDispatcher("product.jsp").forward(req, resp);
+        req.getRequestDispatcher("products.jsp").forward(req, resp);
     }
 }

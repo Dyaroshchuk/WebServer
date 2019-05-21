@@ -1,7 +1,8 @@
 package servlet;
 
-import dao.ProductDao;
-import dao.UserDao;
+import dao.ClientDaoHibImpl;
+import dao.DaoHibImpl;
+import dao.ProductDaoHibImpl;
 import model.Client;
 import model.Product;
 
@@ -15,9 +16,13 @@ import java.util.Optional;
 
 @WebServlet("/editTable")
 public class EditTableServlet extends HttpServlet {
+
+    private static final DaoHibImpl CLIENT_DAO_HIB = new ClientDaoHibImpl();
+    private static final DaoHibImpl PRODUCT_DAO_HIB = new ProductDaoHibImpl();
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if (req.getParameter("name") != null) {
+        if (req.getParameter("clientId") != null) {
             goToClientEditTable(req, resp);
         } else if (req.getParameter("productId") != null) {
             goToProductEditTable(req, resp);
@@ -25,15 +30,11 @@ public class EditTableServlet extends HttpServlet {
             req.setAttribute("error", "can't do operation");
             req.getRequestDispatcher("admin").forward(req, resp);
         }
-
-        Optional<Client> clientFromDB = UserDao.getClientByName(req.getParameter("name"));
-        Client client = clientFromDB.get();
-        req.setAttribute("client", client);
-        req.getRequestDispatcher("editClient.jsp").forward(req, resp);
     }
 
     private static void goToClientEditTable(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Optional<Client> clientFromDB = UserDao.getClientByName(req.getParameter("name"));
+        Long clientId = Long.parseLong(req.getParameter("clientId"));
+        Optional<Client> clientFromDB = CLIENT_DAO_HIB.get(clientId);
         Client client = clientFromDB.get();
         req.setAttribute("client", client);
         req.getRequestDispatcher("editClient.jsp").forward(req, resp);
@@ -41,7 +42,7 @@ public class EditTableServlet extends HttpServlet {
 
     private static void goToProductEditTable(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long productId = Long.parseLong(req.getParameter("productId"));
-        Product product = ProductDao.getProductById(productId).get();
+        Product product = (Product) PRODUCT_DAO_HIB.get(productId).get();
         req.setAttribute("product", product);
         req.getRequestDispatcher("editProduct.jsp").forward(req, resp);
     }
