@@ -1,7 +1,7 @@
 package servlet.admin;
 
-import dao.ClientDaoHibImpl;
-import dao.DaoHibImpl;
+import dao.ClientGenericDao;
+import dao.GenericDao;
 import model.Client;
 
 import javax.servlet.ServletException;
@@ -15,13 +15,13 @@ import java.util.List;
 @WebServlet("/admin/clientList")
 public class ClientList extends HttpServlet {
 
-    private static final DaoHibImpl CLIENT_DAO_HIB = new ClientDaoHibImpl();
+    private static final GenericDao clientDaoHib = new ClientGenericDao();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<Client> clients = CLIENT_DAO_HIB.getAll();
+        List<Client> clients = clientDaoHib.getAll();
         req.setAttribute("clients", clients);
-        req.getRequestDispatcher("clientList.jsp").forward(req, resp);
+        req.getRequestDispatcher("/admin/clientList.jsp").forward(req, resp);
     }
 
     @Override

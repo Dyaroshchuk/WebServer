@@ -8,10 +8,10 @@
 <body>
 <h3><c:out value="${welcome}"></c:out></h3>
 <h3><c:out value="${error}"></c:out></h3>
-<form action="clientList">
+<form action="/admin/clientList">
     <br><input type="submit" value="Client List"/>
 </form>
-<form action="productList">
+<form action="/admin/productList">
     <br><input type="submit" value="Product List">
 </form>
 </body>
