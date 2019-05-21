@@ -12,9 +12,9 @@
     password <input type="password" name="password" required="required"><br><br>
     <input type="submit" value="Sign In"/>
 </form>
-<h4 style="color: indianred"><c:out value="${error}"></c:out></h4>
+<h4><c:out value="${error}"></c:out></h4>
 <c:if test="${login != null}">
-<h3 style="color: green"><c:out value="${login}, you have successfully registered!"></c:out></h3>
+<h3><c:out value="${login}, you have successfully registered!"></c:out></h3>
 </c:if>
 <form action="registration">
     Don't have an account?<br><input type="submit" value="Sign Up"/>

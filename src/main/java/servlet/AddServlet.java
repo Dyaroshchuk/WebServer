@@ -17,7 +17,6 @@ import java.io.IOException;
 public class AddServlet extends HttpServlet {
 
     private static final DaoHibImpl CLIENT_DAO_HIB = new ClientDaoHibImpl();
-    private static final DaoHibImpl PRODUCT_DAO_HIB = new ProductDaoHibImpl();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -55,17 +54,6 @@ public class AddServlet extends HttpServlet {
     }
 
     private static void addProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String name = req.getParameter("name");
-        String description = req.getParameter("description");
-        Double price = Double.parseDouble(req.getParameter("price"));
-        Product product = new Product(name, description, price);
-        int result = PRODUCT_DAO_HIB.add(product);
-        if (result > 0) {
-            req.setAttribute("message", "The product " + name + " was added");
-            req.getRequestDispatcher("productList").forward(req, resp);
-        } else {
-            req.setAttribute("message", "We can't add product " + name);
-            req.getRequestDispatcher("add.jsp").forward(req, resp);
-        }
+
     }
 }

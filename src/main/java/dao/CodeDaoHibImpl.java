@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import utils.HibernateSessionFactory;
 
@@ -15,12 +16,11 @@ import java.util.Optional;
 public class CodeDaoHibImpl implements DaoHibImpl<BuyCodeConfirmation> {
 
     private static final Logger LOGGER = Logger.getLogger(CodeDaoHibImpl.class);
+    private static final SessionFactory SESSION_FACTORY = HibernateSessionFactory.getSessionFactory();
 
     @Override
     public int add(BuyCodeConfirmation buyCodeConfirmation) {
-        try (Session session = HibernateSessionFactory
-                .getSessionFactory()
-                .openSession()) {
+        try (Session session = HibernateSessionFactory.getSessionFactory().openSession()) {
 
             Transaction tx1 = session.beginTransaction();
             session.save(buyCodeConfirmation);
@@ -34,9 +34,7 @@ public class CodeDaoHibImpl implements DaoHibImpl<BuyCodeConfirmation> {
 
     @Override
     public List<BuyCodeConfirmation> getAll() {
-        try (Session session = HibernateSessionFactory
-                .getSessionFactory()
-                .openSession()) {
+        try (Session session = HibernateSessionFactory.getSessionFactory().openSession()) {
 
             List<BuyCodeConfirmation> codes = (List<BuyCodeConfirmation>) session
                     .createQuery("From BuyCodeConfirmation")
@@ -50,9 +48,7 @@ public class CodeDaoHibImpl implements DaoHibImpl<BuyCodeConfirmation> {
 
     @Override
     public int delete(Long id) {
-        try (Session session = HibernateSessionFactory
-                .getSessionFactory()
-                .openSession()) {
+        try (Session session = HibernateSessionFactory.getSessionFactory().openSession()) {
 
             Transaction tx1 = session.beginTransaction();
             session.delete(get(id).get());
@@ -66,9 +62,7 @@ public class CodeDaoHibImpl implements DaoHibImpl<BuyCodeConfirmation> {
 
     @Override
     public int edit(BuyCodeConfirmation buyCodeConfirmation) {
-        try (Session session = HibernateSessionFactory
-                .getSessionFactory()
-                .openSession()) {
+        try (Session session = SESSION_FACTORY.openSession()) {
 
             Transaction tx1 = session.beginTransaction();
             session.update(buyCodeConfirmation);
@@ -83,9 +77,7 @@ public class CodeDaoHibImpl implements DaoHibImpl<BuyCodeConfirmation> {
 
     @Override
     public Optional<BuyCodeConfirmation> get(Long id) {
-        try (Session session = HibernateSessionFactory
-                .getSessionFactory()
-                .openSession()) {
+        try (Session session = SESSION_FACTORY.openSession()) {
 
             Optional<BuyCodeConfirmation> codeConfirmation = Optional.of(session
                     .get(BuyCodeConfirmation.class, id));
@@ -98,9 +90,7 @@ public class CodeDaoHibImpl implements DaoHibImpl<BuyCodeConfirmation> {
 
     @Override
     public Optional<BuyCodeConfirmation> get(String value) {
-        try (Session session = HibernateSessionFactory
-                .getSessionFactory()
-                .openSession()) {
+        try (Session session = SESSION_FACTORY.openSession()) {
 
             Query queryFindByValue = session.
                     createQuery("From BBuyCodeConfirmation Where value = :value");

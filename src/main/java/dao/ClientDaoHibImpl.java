@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import utils.HashPassword;
 import utils.HibernateSessionFactory;
@@ -16,12 +17,11 @@ import java.util.Optional;
 public class ClientDaoHibImpl implements DaoHibImpl<Client> {
 
     private static final Logger LOGGER = Logger.getLogger(ClientDaoHibImpl.class);
+    private static final SessionFactory SESSION_FACTORY = HibernateSessionFactory.getSessionFactory();
 
     @Override
     public int add(Client client) {
-        try (Session session = HibernateSessionFactory
-                .getSessionFactory()
-                .openSession()) {
+        try (Session session = SESSION_FACTORY.openSession()) {
 
             String password = client.getPassword();
             client.setPassword(HashPassword.getSecurePassword(password, client.getSalt()));
@@ -37,9 +37,7 @@ public class ClientDaoHibImpl implements DaoHibImpl<Client> {
 
     @Override
     public List<Client> getAll() {
-        try (Session session = HibernateSessionFactory
-                .getSessionFactory()
-                .openSession()) {
+        try (Session session = SESSION_FACTORY.openSession()) {
 
             List<Client> clients = (List<Client>) session
                     .createQuery("From Client")
@@ -53,9 +51,7 @@ public class ClientDaoHibImpl implements DaoHibImpl<Client> {
 
     @Override
     public int delete(Long id) {
-        try (Session session = HibernateSessionFactory
-                .getSessionFactory()
-                .openSession()) {
+        try (Session session = SESSION_FACTORY.openSession()) {
 
             LOGGER.info("Admin deleting client" + id);
             Transaction tx1 = session.beginTransaction();
@@ -72,9 +68,7 @@ public class ClientDaoHibImpl implements DaoHibImpl<Client> {
 
     @Override
     public int edit(Client client) {
-        try (Session session = HibernateSessionFactory
-                .getSessionFactory()
-                .openSession()) {
+        try (Session session = SESSION_FACTORY.openSession()) {
 
             LOGGER.info("Admin editing client" + client.getId());
             String password = client.getPassword();
@@ -92,9 +86,7 @@ public class ClientDaoHibImpl implements DaoHibImpl<Client> {
 
     @Override
     public Optional<Client> get(Long id) {
-        try (Session session = HibernateSessionFactory
-                .getSessionFactory()
-                .openSession()) {
+        try (Session session = SESSION_FACTORY.openSession()) {
 
             Optional<Client> client = Optional.of(session.get(Client.class, id));
             return client;
@@ -106,7 +98,7 @@ public class ClientDaoHibImpl implements DaoHibImpl<Client> {
 
     @Override
     public Optional<Client> get(String login) {
-        try (Session session = HibernateSessionFactory.getSessionFactory().openSession()) {
+        try (Session session = SESSION_FACTORY.openSession()) {
             Query queryFindByLogin = session.createQuery("from Client where login = :login");
             queryFindByLogin.setParameter("login", login);
             List<Client> findUserByLogin = queryFindByLogin.list();

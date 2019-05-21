@@ -21,6 +21,6 @@ public class ProductsTable extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<Product> products = PRODUCT_DAO_HIB.getAll();
         req.setAttribute("products", products);
-        req.getRequestDispatcher("product.jsp").forward(req, resp);
+        req.getRequestDispatcher("products.jsp").forward(req, resp);
     }
 }

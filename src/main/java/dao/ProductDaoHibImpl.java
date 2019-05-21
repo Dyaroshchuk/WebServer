@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import utils.HibernateSessionFactory;
 
@@ -41,6 +42,7 @@ public class ProductDaoHibImpl implements DaoHibImpl<Product> {
             List<Product> products = (List<Product>) session
                     .createQuery("From Product")
                     .list();
+            session.flush();
             return products;
         } catch (HibernateException e) {
             LOGGER.error("Can't get list of products", e);
@@ -50,14 +52,14 @@ public class ProductDaoHibImpl implements DaoHibImpl<Product> {
 
     @Override
     public int delete(Long id) {
-        try (Session session = HibernateSessionFactory
-                .getSessionFactory()
-                .openSession()) {
-
+        try {
+            Session session = HibernateSessionFactory
+                    .getSessionFactory()
+                    .openSession();
             Transaction tx1 = session.beginTransaction();
             session.delete(get(id).get());
             tx1.commit();
-            session.flush();
+            session.close();
             return 1;
         } catch (Exception e) {
             LOGGER.error("Can't delete product " + id, e);
