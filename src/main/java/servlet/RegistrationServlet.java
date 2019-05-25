@@ -24,7 +24,7 @@ public class RegistrationServlet extends HttpServlet {
         String login = req.getParameter("login");
         String password = req.getParameter("password");
         String email = req.getParameter("email");
-        Role role = new Role("USER");
+        Role role = new Role(Role.RoleType.USER);
         Client newClient = new Client(login, password, email, role);
 
         if (clientDaoHib.add(newClient) > 0) {

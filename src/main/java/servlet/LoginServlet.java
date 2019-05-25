@@ -3,6 +3,7 @@ package servlet;
 import dao.ClientDaoHibImpl;
 import dao.ClientDao;
 import model.Client;
+import model.Role;
 import utils.HashPassword;
 
 import javax.servlet.ServletException;
@@ -24,7 +25,7 @@ public class LoginServlet extends HttpServlet {
 
         String login = req.getParameter("login");
         String password = req.getParameter("password");
-        Client client = getClientFromOptional(clientDaoHib.getByLogin(login), req, resp);
+        Client client = getClientFromOptional(clientDaoHib.getClientByLogin(login), req, resp);
         String hashedPassword = HashPassword.getSecurePassword(password, client.getSalt());
         if (client.getPassword().equals(hashedPassword)) {
             req.getSession().setAttribute("client", client);
@@ -47,7 +48,7 @@ public class LoginServlet extends HttpServlet {
     }
 
     private static void redirectByRole(Client client, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if (client.getRole().getName().equals("ADMIN")) {
+        if (client.getRole().getName().equals(Role.RoleType.ADMIN)) {
             req.setAttribute("welcome", client.getLogin() + ", welcome to admin page");
             req.getRequestDispatcher("/admin").forward(req, resp);
         } else {

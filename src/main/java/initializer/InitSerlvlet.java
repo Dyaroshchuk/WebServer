@@ -17,7 +17,6 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @WebServlet(value = "/init", loadOnStartup = 1)
@@ -29,8 +28,8 @@ public class InitSerlvlet extends HttpServlet {
         ProductDao productDaoHib = new ProductDaoHibImpl();
         OrderDao orderDaoHib = new OrderDaoHibImpl();
         RoleDao roleDaoHib = new RoleDaoHibImpl();
-        Role adminRole = new Role("ADMIN");
-        Role userRole = new Role("User");
+        Role adminRole = new Role(Role.RoleType.ADMIN);
+        Role userRole = new Role(Role.RoleType.USER);
         roleDaoHib.add(adminRole);
         roleDaoHib.add(userRole);
 

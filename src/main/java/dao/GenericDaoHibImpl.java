@@ -12,13 +12,13 @@ import java.util.Optional;
 public abstract class GenericDaoHibImpl<T> implements GenericDao<T> {
 
     @Override
-    public int add(T object) {
+    public int add(T t) {
         try (Session session = HibernateSessionFactory
                 .getSessionFactory()
                 .openSession()) {
-            Transaction tx1 = session.beginTransaction();
-            session.save(object);
-            tx1.commit();
+            Transaction transaction = session.beginTransaction();
+            session.save(t);
+            transaction.commit();
             return 1;
         } catch (HibernateException e) {
             return 0;
@@ -31,11 +31,11 @@ public abstract class GenericDaoHibImpl<T> implements GenericDao<T> {
                 .getSessionFactory()
                 .openSession()) {
 
-            Transaction tx1 = session.beginTransaction();
+            Transaction transaction = session.beginTransaction();
             List<T> objects = (List<T>) session
                     .createQuery("From " + entityClass.getName())
                     .list();
-            tx1.commit();
+            transaction.commit();
             return objects;
         } catch (HibernateException e) {
             return new ArrayList<>();
@@ -48,9 +48,9 @@ public abstract class GenericDaoHibImpl<T> implements GenericDao<T> {
                 .getSessionFactory()
                 .openSession()) {
 
-            Transaction tx1 = session.beginTransaction();
+            Transaction transaction = session.beginTransaction();
             session.delete(get(entityClass, id).get());
-            tx1.commit();
+            transaction.commit();
             return 1;
         } catch (Exception e) {
             return 0;
@@ -63,9 +63,9 @@ public abstract class GenericDaoHibImpl<T> implements GenericDao<T> {
                 .getSessionFactory()
                 .openSession()) {
 
-            Transaction tx1 = session.beginTransaction();
+            Transaction transaction = session.beginTransaction();
             session.update(t);
-            tx1.commit();
+            transaction.commit();
             return 1;
         } catch (HibernateException e) {
             return 0;
@@ -77,9 +77,9 @@ public abstract class GenericDaoHibImpl<T> implements GenericDao<T> {
         try (Session session = HibernateSessionFactory
                 .getSessionFactory()
                 .openSession()) {
-            Transaction tx1 = session.beginTransaction();
+            Transaction transaction = session.beginTransaction();
             Optional<T> object = Optional.of(session.get(entityClass, id));
-            tx1.commit();
+            transaction.commit();
             return object;
         } catch (HibernateException e) {
             return Optional.empty();

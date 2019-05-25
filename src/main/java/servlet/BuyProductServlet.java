@@ -8,7 +8,6 @@ import dao.ProductDaoHibImpl;
 import dao.ProductDao;
 import model.BuyCodeConfirmation;
 import model.Client;
-import model.Product;
 import service.MailService;
 import utils.RandomHelper;
 
@@ -35,7 +34,7 @@ public class BuyProductServlet extends HttpServlet {
         Client clientFromDB = clientDaoHib.get(Client.class, clientFromSession.getId()).get();
         String codeValue = req.getParameter("buyCodeConfirmation");
         BuyCodeConfirmation buyCodeConfirmation = new BuyCodeConfirmation(codeValue, clientFromDB.getLogin(), orderId);
-        Optional<BuyCodeConfirmation> codeFromDB = codeDaoHib.getByValue(orderId);
+        Optional<BuyCodeConfirmation> codeFromDB = codeDaoHib.getCodeByOrderId(orderId);
         if (codeFromDB.isPresent() && codeFromDB.equals(Optional.of(buyCodeConfirmation))) {
             req.setAttribute("approved", "You have successfully made a purchase");
             req.getRequestDispatcher("/product").forward(req, resp);

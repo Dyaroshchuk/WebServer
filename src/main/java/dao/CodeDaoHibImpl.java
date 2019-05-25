@@ -17,21 +17,21 @@ public class CodeDaoHibImpl extends GenericDaoHibImpl<BuyCodeConfirmation> imple
     private static final SessionFactory sessionFactory = HibernateSessionFactory.getSessionFactory();
 
     @Override
-    public Optional<BuyCodeConfirmation> getByValue(Long orderId) {
+    public Optional<BuyCodeConfirmation> getCodeByOrderId(Long orderId) {
         try (Session session = sessionFactory.openSession()) {
-            Transaction tx1 = session.beginTransaction();
+            Transaction transaction = session.beginTransaction();
             Query queryFindByValue = session.
                     createQuery("From BuyCodeConfirmation Where order_id = :order_id");
             queryFindByValue.setParameter("order_id", orderId);
             List<BuyCodeConfirmation> findCodeByValue = queryFindByValue.list();
-            tx1.commit();
+            transaction.commit();
             if (findCodeByValue.size() == 0) {
                 return Optional.empty();
             } else {
                 return Optional.of(findCodeByValue.get(0));
             }
         } catch (Exception e) {
-            logger.error("Can't getByLogin code by login " + orderId, e);
+            logger.error("Can't getClientByLogin code by login " + orderId, e);
             return Optional.empty();
         }
     }

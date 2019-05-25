@@ -4,7 +4,6 @@ import dao.ClientDao;
 import dao.ClientDaoHibImpl;
 import model.Client;
 import model.Order;
-import model.Product;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,7 +11,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 
 @WebServlet(value = "/orderDetails")
 public class OrderDetails extends HttpServlet {
@@ -34,7 +32,6 @@ public class OrderDetails extends HttpServlet {
             req.getRequestDispatcher("orderDetails.jsp").forward(req, resp);
         }
     }
-
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

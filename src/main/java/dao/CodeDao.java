@@ -6,5 +6,5 @@ import java.util.Optional;
 
 public interface CodeDao extends GenericDao<BuyCodeConfirmation> {
 
-    Optional<BuyCodeConfirmation> getByValue(Long value);
+    Optional<BuyCodeConfirmation> getCodeByOrderId(Long orderId);
 }

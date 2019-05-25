@@ -27,7 +27,7 @@ public class AddClient extends HttpServlet {
         String login = req.getParameter("login");
         String password = req.getParameter("password");
         String email = req.getParameter("email");
-        Role role = new Role(req.getParameter("role"));
+        Role role = new Role(Role.RoleType.valueOf(req.getParameter("role")));
 
         Client client = new Client(login, password, email, role);
         int result = clientDaoHib.add(client);

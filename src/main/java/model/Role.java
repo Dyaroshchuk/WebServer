@@ -7,7 +7,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import java.util.ArrayList;
 import java.util.Objects;
 
 @Entity
@@ -20,7 +19,7 @@ public class Role {
     private long id;
 
     @Column(name = "name")
-    private String name;
+    private RoleType name;
 
     @OneToOne(mappedBy = "role")
     private Client client;
@@ -28,11 +27,11 @@ public class Role {
     public Role() {
     }
 
-    public Role(String name) {
+    public Role(RoleType name) {
         this.name = name;
     }
 
-    public Role(String name, Client client) {
+    public Role(RoleType name, Client client) {
         this.name = name;
         this.client = client;
     }
@@ -45,11 +44,11 @@ public class Role {
         this.id = id;
     }
 
-    public String getName() {
+    public RoleType getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(RoleType name) {
         this.name = name;
     }
 
@@ -67,12 +66,17 @@ public class Role {
         if (o == null || getClass() != o.getClass()) return false;
         Role role = (Role) o;
         return id == role.id &&
-                Objects.equals(name, role.name) &&
+                name == role.name &&
                 Objects.equals(client, role.client);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(id, name, client);
+    }
+
+    public enum RoleType {
+        ADMIN,
+        USER
     }
 }
