@@ -6,9 +6,6 @@
     <link rel="stylesheet" href="http://localhost:8082/myStyle.css">
 </head>
 <body>
-<form action="/admin">
-    <br><input type="submit" value="Admin Page"/>
-</form>
 <h1>Clients List</h1>
 <h3><c:out value="${message}"></c:out></h3>
 <table border='1' width='100%'>
@@ -25,7 +22,7 @@
     <td>${client.getPassword()}</td>
     <td>${client.getEmail()}</td>
     <td><a href="editClientForm?clientId=${client.getId()}">edit</a></td>
-        <td><a href="deleteClient?clientId=${client.getId()}">delete</a> </td>
+    <td><a href="deleteClient?clientId=${client.getId()}">delete</a></td>
     </tr>
     </c:forEach>
 </table>
@@ -35,5 +32,6 @@
 <form action="/admin/addClientForm">
     <br><input type="submit" value="Add Client"/>
 </form>
+
 </body>
 </html>

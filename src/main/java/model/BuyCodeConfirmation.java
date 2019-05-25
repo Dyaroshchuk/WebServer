@@ -28,8 +28,8 @@ public class BuyCodeConfirmation {
     @Column(name = "clientName")
     private String clientName;
 
-    @Column(name = "product_id")
-    private Long productId;
+    @Column(name = "order_id")
+    private Long orderId;
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
@@ -39,16 +39,16 @@ public class BuyCodeConfirmation {
     public BuyCodeConfirmation() {
     }
 
-    public BuyCodeConfirmation(String value, String clientName, Long productId) {
+    public BuyCodeConfirmation(String value, String clientName, Long orderId) {
         this.value = value;
         this.clientName = clientName;
-        this.productId = productId;
+        this.orderId = orderId;
     }
 
-    public BuyCodeConfirmation(String value, String clientName, Long productId, Date creationDate) {
+    public BuyCodeConfirmation(String value, String clientName, Long orderId, Date creationDate) {
         this.value = value;
         this.clientName = clientName;
-        this.productId = productId;
+        this.orderId = orderId;
         this.creationDate = creationDate;
     }
 
@@ -76,12 +76,12 @@ public class BuyCodeConfirmation {
         this.clientName = clientName;
     }
 
-    public Long getProductId() {
-        return productId;
+    public Long getOrderId() {
+        return orderId;
     }
 
-    public void setProductId(Long productId) {
-        this.productId = productId;
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
     }
 
     public Date getCreationDate() {
@@ -99,12 +99,12 @@ public class BuyCodeConfirmation {
         BuyCodeConfirmation that = (BuyCodeConfirmation) o;
         return Objects.equals(value, that.value) &&
                 Objects.equals(clientName, that.clientName) &&
-                Objects.equals(productId, that.productId);
+                Objects.equals(orderId, that.orderId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(value, clientName, productId);
+        return Objects.hash(value, clientName, orderId);
     }
 
     @Override
@@ -113,7 +113,7 @@ public class BuyCodeConfirmation {
                 "id=" + id +
                 ", value='" + value + '\'' +
                 ", clientName='" + clientName + '\'' +
-                ", productId=" + productId +
+                ", orderId=" + orderId +
                 '}';
     }
 }

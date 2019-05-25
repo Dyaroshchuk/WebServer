@@ -1,8 +1,9 @@
 package servlet.admin;
 
-import dao.ClientGenericDao;
-import dao.GenericDao;
+import dao.ClientDao;
+import dao.ClientDaoHibImpl;
 import model.Client;
+import model.Role;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,7 +15,7 @@ import java.io.IOException;
 @WebServlet(value = "/admin/addClient")
 public class AddClient extends HttpServlet {
 
-    private static final GenericDao clientDaoHib = new ClientGenericDao();
+    private static final ClientDao clientDaoHib = new ClientDaoHibImpl();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -26,7 +27,7 @@ public class AddClient extends HttpServlet {
         String login = req.getParameter("login");
         String password = req.getParameter("password");
         String email = req.getParameter("email");
-        String role = req.getParameter("role");
+        Role role = new Role(req.getParameter("role"));
 
         Client client = new Client(login, password, email, role);
         int result = clientDaoHib.add(client);

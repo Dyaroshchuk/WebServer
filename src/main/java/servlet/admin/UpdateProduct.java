@@ -1,7 +1,7 @@
 package servlet.admin;
 
-import dao.GenericDao;
-import dao.ProductGenericDao;
+import dao.ProductDaoHibImpl;
+import dao.ProductDao;
 import model.Product;
 
 import javax.servlet.ServletException;
@@ -14,7 +14,7 @@ import java.io.IOException;
 @WebServlet(value = "/admin/updateProduct")
 public class UpdateProduct extends HttpServlet {
 
-    private static final GenericDao productDaoHib = new ProductGenericDao();
+    private static final ProductDao productDaoHib = new ProductDaoHibImpl();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -23,7 +23,7 @@ public class UpdateProduct extends HttpServlet {
         String description = req.getParameter("description");
         Double price = Double.parseDouble(req.getParameter("price"));
         Product product = new Product(productId, name, description, price);
-        int result = productDaoHib.edit(product);
+        int result = productDaoHib.update(product);
         if (result > 0) {
             resp.sendRedirect("/admin/productList");
         } else {

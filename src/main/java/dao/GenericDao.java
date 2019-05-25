@@ -9,9 +9,9 @@ public interface GenericDao<T> {
 
     List<T> getAll(Class<T> entityClass);
 
-    int delete(Long id);
+    int delete(Class<T> entityClass, Long id);
 
-    int edit(T t);
+    int update(T t);
 
-    Optional<T> get(Long id);
+    Optional<T> get(Class<T> entityClass, Long id);
 }

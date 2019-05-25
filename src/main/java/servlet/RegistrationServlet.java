@@ -1,8 +1,9 @@
 package servlet;
 
-import dao.ClientGenericDao;
-import dao.GenericDao;
+import dao.ClientDaoHibImpl;
+import dao.ClientDao;
 import model.Client;
+import model.Role;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,7 +16,7 @@ import java.io.IOException;
 @WebServlet(value = "/registration")
 public class RegistrationServlet extends HttpServlet {
 
-    private static final GenericDao clientDaoHib = new ClientGenericDao();
+    private static final ClientDao clientDaoHib = new ClientDaoHibImpl();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
@@ -23,7 +24,8 @@ public class RegistrationServlet extends HttpServlet {
         String login = req.getParameter("login");
         String password = req.getParameter("password");
         String email = req.getParameter("email");
-        Client newClient = new Client(login, password, email, "USER");
+        Role role = new Role("USER");
+        Client newClient = new Client(login, password, email, role);
 
         if (clientDaoHib.add(newClient) > 0) {
             req.setAttribute("login", login);

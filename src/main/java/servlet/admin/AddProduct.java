@@ -1,7 +1,7 @@
 package servlet.admin;
 
-import dao.GenericDao;
-import dao.ProductGenericDao;
+import dao.ProductDao;
+import dao.ProductDaoHibImpl;
 import model.Product;
 
 import javax.servlet.ServletException;
@@ -14,7 +14,7 @@ import java.io.IOException;
 @WebServlet(value = "/admin/addProduct")
 public class AddProduct extends HttpServlet {
 
-    private static final GenericDao productDaoHib = new ProductGenericDao();
+    private static final ProductDao productDaoHib = new ProductDaoHibImpl();
 
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String name = req.getParameter("name");

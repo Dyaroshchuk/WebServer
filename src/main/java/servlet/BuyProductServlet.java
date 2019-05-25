@@ -1,8 +1,11 @@
 package servlet;
 
-import dao.CodeGenericDao;
-import dao.GenericDao;
-import dao.ProductGenericDao;
+import dao.ClientDao;
+import dao.ClientDaoHibImpl;
+import dao.CodeDaoHibImpl;
+import dao.CodeDao;
+import dao.ProductDaoHibImpl;
+import dao.ProductDao;
 import model.BuyCodeConfirmation;
 import model.Client;
 import model.Product;
@@ -20,24 +23,25 @@ import java.util.Optional;
 @WebServlet("/buy")
 public class BuyProductServlet extends HttpServlet {
 
-    private static final GenericDao productDaoHib = new ProductGenericDao();
-    private static final GenericDao codeDaoHib = new CodeGenericDao();
+    private static final ProductDao productDaoHib = new ProductDaoHibImpl();
+    private static final CodeDao codeDaoHib = new CodeDaoHibImpl();
+    private static final ClientDao clientDaoHib = new ClientDaoHibImpl();
     private static final MailService mailService = new MailService();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Long productId = Long.parseLong(req.getParameter("good_id"));
-        Client client = (Client) req.getSession().getAttribute("client");
+        Long orderId = Long.parseLong(req.getParameter("orderId"));
+        Client clientFromSession = (Client) req.getSession().getAttribute("client");
+        Client clientFromDB = clientDaoHib.get(Client.class, clientFromSession.getId()).get();
         String codeValue = req.getParameter("buyCodeConfirmation");
-        BuyCodeConfirmation buyCodeConfirmation = new BuyCodeConfirmation(codeValue, client.getLogin(), productId);
-        Optional<BuyCodeConfirmation> codeFromeDB = codeDaoHib.get(codeValue);
-        if (codeFromeDB.isPresent() && codeFromeDB.equals(Optional.of(buyCodeConfirmation))) {
-            Product product = (Product) productDaoHib.get(productId).get();
-            req.setAttribute("approved", "You are successful buy " + product.getName());
+        BuyCodeConfirmation buyCodeConfirmation = new BuyCodeConfirmation(codeValue, clientFromDB.getLogin(), orderId);
+        Optional<BuyCodeConfirmation> codeFromDB = codeDaoHib.getByValue(orderId);
+        if (codeFromDB.isPresent() && codeFromDB.equals(Optional.of(buyCodeConfirmation))) {
+            req.setAttribute("approved", "You have successfully made a purchase");
             req.getRequestDispatcher("/product").forward(req, resp);
         } else {
             req.setAttribute("error", "wrong Code confirmation");
-            req.setAttribute("productId", productId);
+            req.setAttribute("orderId", orderId);
             req.getRequestDispatcher("buyConfirmation.jsp").forward(req, resp);
         }
 
@@ -45,13 +49,14 @@ public class BuyProductServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Long productId = Long.parseLong(req.getParameter("id"));
-        Client client = (Client) req.getSession().getAttribute("client");
+        Long orderId = Long.parseLong(req.getParameter("orderId"));
+        Client clientFromSession = (Client) req.getSession().getAttribute("client");
+        Client clientFromDB = clientDaoHib.get(Client.class, clientFromSession.getId()).get();
         String randomCode = RandomHelper.getRandomCode();
-        mailService.sendMail(client.getEmail(), randomCode);
-        BuyCodeConfirmation buyCodeConfirmation = new BuyCodeConfirmation(randomCode, client.getLogin(), productId);
+        mailService.sendMail(clientFromDB.getEmail(), randomCode);
+        BuyCodeConfirmation buyCodeConfirmation = new BuyCodeConfirmation(randomCode, clientFromDB.getLogin(), orderId);
         codeDaoHib.add(buyCodeConfirmation);
-        req.setAttribute("productId", productId);
+        req.setAttribute("orderId", orderId);
         req.getRequestDispatcher("buyConfirmation.jsp").forward(req, resp);
     }
 }

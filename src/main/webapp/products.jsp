@@ -13,14 +13,18 @@
         <th>Name</th>
         <th>Description</th>
         <th>Price</th>
-        <th>Buy</th>
+        <th>Add to Cart</th>
         <c:forEach var="product" items ="${products}" >
     <tr><td>${product.getName()}</td>
         <td>${product.getDescription()}</td>
         <td>${product.getPrice()}</td>
-        <td><a href="buy?id=${product.getId()}">Buy</a> </td>
+        <td><a href="addToOrder?id=${product.getId()}">Add to Cart</a> </td>
     </tr>
     </c:forEach>
 </table>
+<form action="/orderDetails">
+    <br><input type="submit" value="Cart Items ${order}">
+</form>
+<h3><c:out value="${message}"></c:out></h3>
 </body>
 </html>

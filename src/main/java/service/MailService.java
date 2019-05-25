@@ -36,7 +36,7 @@ public class MailService {
 
             message.setRecipient(Message.RecipientType.TO, new InternetAddress(clientEmail));
             message.setSubject("Purchase confirmation code");
-            message.setText("Your code to by product: " + randomCode + "\n This code is valid 2 minutes");
+            message.setText("Your code to by product: " + randomCode + "\n This code is valid 5 minutes");
 
             Transport.send(message);
 
