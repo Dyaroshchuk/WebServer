@@ -1,7 +1,7 @@
 package servlet.admin;
 
-import dao.GenericDao;
-import dao.ProductGenericDao;
+import dao.ProductDaoHibImpl;
+import dao.ProductDao;
 import model.Product;
 
 import javax.servlet.ServletException;
@@ -14,7 +14,7 @@ import java.io.IOException;
 @WebServlet(value = "/admin/deleteProduct")
 public class DeleteProduct extends HttpServlet {
 
-    private static final GenericDao productDaoHib = new ProductGenericDao();
+    private static final ProductDao productDaoHib = new ProductDaoHibImpl();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -24,8 +24,8 @@ public class DeleteProduct extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long productId = Long.parseLong(req.getParameter("productId"));
-        Product deleteProduct = (Product) productDaoHib.get(productId).get();
-        int result = productDaoHib.delete(productId);
+        Product deleteProduct = productDaoHib.get(Product.class, productId).get();
+        int result = productDaoHib.delete(Product.class, productId);
         if (result > 0) {
             req.setAttribute("message", "The Product " + deleteProduct + " was deleted");
             req.getRequestDispatcher("/admin/productList").forward(req, resp);

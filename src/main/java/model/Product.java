@@ -3,10 +3,14 @@ package model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -26,6 +30,9 @@ public class Product {
 
     @Column(name = "price")
     private double price;
+
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "products")
+    private List<Order> orders;
 
     public Product() {
     }

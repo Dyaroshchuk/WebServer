@@ -9,15 +9,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class GenericDaoHibImpl<T> implements GenericDao<T> {
+public abstract class GenericDaoHibImpl<T> implements GenericDao<T> {
+
     @Override
     public int add(T t) {
         try (Session session = HibernateSessionFactory
                 .getSessionFactory()
                 .openSession()) {
-            Transaction tx1 = session.beginTransaction();
+            Transaction transaction = session.beginTransaction();
             session.save(t);
-            tx1.commit();
+            transaction.commit();
             return 1;
         } catch (HibernateException e) {
             return 0;
@@ -30,28 +31,58 @@ public class GenericDaoHibImpl<T> implements GenericDao<T> {
                 .getSessionFactory()
                 .openSession()) {
 
-            List<T> products = (List<T>) session
+            Transaction transaction = session.beginTransaction();
+            List<T> objects = (List<T>) session
                     .createQuery("From " + entityClass.getName())
                     .list();
-            session.flush();
-            return products;
+            transaction.commit();
+            return objects;
         } catch (HibernateException e) {
             return new ArrayList<>();
         }
     }
 
     @Override
-    public int delete(Long id) {
-        return 0;
+    public int delete(Class<T> entityClass, Long id) {
+        try (Session session = HibernateSessionFactory
+                .getSessionFactory()
+                .openSession()) {
+
+            Transaction transaction = session.beginTransaction();
+            session.delete(get(entityClass, id).get());
+            transaction.commit();
+            return 1;
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
     @Override
-    public int edit(T t) {
-        return 0;
+    public int update(T t) {
+        try (Session session = HibernateSessionFactory
+                .getSessionFactory()
+                .openSession()) {
+
+            Transaction transaction = session.beginTransaction();
+            session.update(t);
+            transaction.commit();
+            return 1;
+        } catch (HibernateException e) {
+            return 0;
+        }
     }
 
     @Override
-    public Optional<T> get(Long id) {
-        return Optional.empty();
+    public Optional<T> get(Class<T> entityClass, Long id) {
+        try (Session session = HibernateSessionFactory
+                .getSessionFactory()
+                .openSession()) {
+            Transaction transaction = session.beginTransaction();
+            Optional<T> object = Optional.of(session.get(entityClass, id));
+            transaction.commit();
+            return object;
+        } catch (HibernateException e) {
+            return Optional.empty();
+        }
     }
 }

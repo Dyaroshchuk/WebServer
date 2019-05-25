@@ -2,7 +2,9 @@ package utils;
 
 import model.BuyCodeConfirmation;
 import model.Client;
+import model.Order;
 import model.Product;
+import model.Role;
 import org.apache.log4j.Logger;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -24,6 +26,8 @@ public class HibernateSessionFactory {
                 configuration.addAnnotatedClass(Product.class);
                 configuration.addAnnotatedClass(Client.class);
                 configuration.addAnnotatedClass(BuyCodeConfirmation.class);
+                configuration.addAnnotatedClass(Role.class);
+                configuration.addAnnotatedClass(Order.class);
                 StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
                 sessionFactory = configuration.buildSessionFactory(builder.build());
 

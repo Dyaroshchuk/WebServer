@@ -1,4 +1,4 @@
-h1, h3, h4, form, td, th, table {
+h1, h3, h4, form, td, th {
     text-align: center;
 }
 
@@ -8,4 +8,8 @@ h3 {
 
 h4 {
     color: red;
+}
+
+table {
+    border: 1px; width: 70%; margin-left: 15%; margin-right: 15%;
 }

@@ -1,6 +1,7 @@
 package filter;
 
 import model.Client;
+import model.Role;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -12,8 +13,7 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-@WebFilter(value = {"/admin/*", "/clientList/*", "/editClient/*", "/editTable/*", "/productList/*",
-                    "/add/*", })
+@WebFilter(value = {"/admin/*"})
 public class AdminFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -24,7 +24,7 @@ public class AdminFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         Client client = (Client) request.getSession().getAttribute("client");
 
-        if (client.getRole().equals("ADMIN")) {
+        if (client.getRole().getName().equals(Role.RoleType.ADMIN)) {
             filterChain.doFilter(servletRequest, servletResponse);
         } else {
             request.getRequestDispatcher("accessDenied.jsp").forward(request, servletResponse);

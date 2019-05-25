@@ -21,8 +21,8 @@
         <td>${product.getName()}</td>
         <td>${product.getDescription()}</td>
         <td>${product.getPrice()}</td>
-        <td><a href="editProductForm?productId=${product.getId()}">edit</a></td>
-        <td><a href="deleteProduct?productId=${product.getId()}">delete</a> </td>
+        <td><a href="editProductForm?orderId=${product.getId()}">edit</a></td>
+        <td><a href="deleteProduct?orderId=${product.getId()}">delete</a> </td>
     </tr>
     </c:forEach>
 </table>

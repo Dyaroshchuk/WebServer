@@ -8,7 +8,7 @@
 <body>
 <h3>Buy Confirmation</h3>
 <form action="/buy" method="post">
-    <input hidden type="text" name="good_id" value="${productId}">
+    <input hidden type="text" name="orderId" value="${orderId}">
     <input type="password" title="password" name="buyCodeConfirmation">
     <input type="submit" value="confirm">
     <h4><c:out value="${error}"></c:out></h4>
